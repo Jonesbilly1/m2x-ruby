@@ -16,6 +16,6 @@ class M2X
   end
 
   def status
-    client.get("/status").json
+    client.get("/status")
   end
 end
