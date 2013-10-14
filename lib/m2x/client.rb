@@ -4,7 +4,7 @@ require "openssl"
 
 class M2X
   class Client
-    API_BASE = "https://api-m2x.att.com/v1".freeze
+    API_BASE = "http://api-m2x.att.com/v1".freeze
 
     VERSION = "0.0.1".freeze
 
