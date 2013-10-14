@@ -20,7 +20,7 @@ class M2X
     def request(verb, path, qs=nil, params=nil, headers=nil)
       url = URI.parse(File.join(api_base, path))
 
-      url.query = URI.encode_www_form(qs) if qs
+      url.query = URI.encode_www_form(qs) unless qs.nil? || qs.empty?
 
       headers = default_headers.merge(headers || {})
 
