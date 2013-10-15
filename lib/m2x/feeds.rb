@@ -35,5 +35,15 @@ class M2X
     def keys(id)
       @client.get("/keys", feed: id)
     end
+
+    def create_key(id, params)
+      keys_api.create(params.merge(feed: id))
+    end
+
+    private
+
+    def keys_api
+      @keys_api ||= ::M2X::Keys.new(@client)
+    end
   end
 end
