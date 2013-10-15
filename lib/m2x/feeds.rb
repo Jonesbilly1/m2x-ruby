@@ -24,6 +24,10 @@ class M2X
       @client.put("/feeds/#{URI.encode(id)}/location", nil, params)
     end
 
+    def location_delete(id)
+      @client.delete("/feeds/#{URI.encode(id)}/location")
+    end
+
     def streams(id)
       @client.get("/feeds/#{URI.encode(id)}/streams")
     end
