@@ -31,5 +31,9 @@ class M2X
     def stream_put(id, name, params)
       @client.put("/feeds/#{URI.encode(id)}/streams/#{URI.encode(name)}", {}, params)
     end
+
+    def keys(id)
+      @client.get("/keys", feed: id)
+    end
   end
 end
