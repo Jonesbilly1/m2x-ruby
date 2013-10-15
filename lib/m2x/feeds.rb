@@ -32,6 +32,10 @@ class M2X
       @client.put("/feeds/#{URI.encode(id)}/streams/#{URI.encode(name)}", {}, params)
     end
 
+    def stream_delete(id, name)
+      @client.delete("/feeds/#{URI.encode(id)}/streams/#{URI.encode(name)}")
+    end
+
     def keys(id)
       @client.get("/keys", feed: id)
     end
