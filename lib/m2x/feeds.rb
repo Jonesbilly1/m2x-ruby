@@ -20,6 +20,10 @@ class M2X
       @client.get("/feeds/#{URI.encode(id)}/location")
     end
 
+    def location_update(id, params)
+      @client.put("/feeds/#{URI.encode(id)}/location", nil, params)
+    end
+
     def streams(id)
       @client.get("/feeds/#{URI.encode(id)}/streams")
     end
