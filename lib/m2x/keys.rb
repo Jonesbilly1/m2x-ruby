@@ -23,5 +23,9 @@ class M2X
     def update(id, params)
       @client.put("/keys/#{URI.encode(id.to_s)}", nil, params, "Content-Type" => "application/json")
     end
+
+    def regenerate(id)
+      @client.post("/keys/#{URI.encode(id.to_s)}/regenerate", nil, {})
+    end
   end
 end
