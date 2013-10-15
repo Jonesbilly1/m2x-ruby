@@ -52,6 +52,10 @@ class M2X
       keys_api.create(params.merge(feed: id))
     end
 
+    def update_key(id, key, params)
+      keys_api.update(key, params.merge(feed: id))
+    end
+
     private
 
     def keys_api
