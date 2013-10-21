@@ -1,8 +1,8 @@
 class M2X
 
-  # Wrapper for AT&T M2X Feeds API
+  # Wrapper for AT&T M2X Feed API
   #
-  # See https://m2x.att.com/developer/documentation/feedfor AT&T M2X
+  # See https://m2x.att.com/developer/documentation/feed for AT&T M2X
   # HTTP Feed API documentation.
   class Feeds
     # Creates a new M2X Feed API Wrapper
