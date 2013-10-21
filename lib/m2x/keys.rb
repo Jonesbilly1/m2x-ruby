@@ -19,13 +19,13 @@ class M2X
     end
 
     # Return the details of the API Key supplied
-    def view(id)
-      @client.get("/keys/#{URI.encode(id.to_s)}")
+    def view(key)
+      @client.get("/keys/#{URI.encode(key.to_s)}")
     end
 
     # Delete the supplied API Key
-    def delete(id)
-      @client.delete("/keys/#{URI.encode(id.to_s)}")
+    def delete(key)
+      @client.delete("/keys/#{URI.encode(key.to_s)}")
     end
 
     # Create a new API Key
@@ -41,15 +41,15 @@ class M2X
     # Update API Key properties
     #
     # This method accepts the same parameters as create API Key and
-    # has the same validations. Note that the Key token cannot be
+    # has the same valkeyations. Note that the Key token cannot be
     # updated through this method.
-    def update(id, params)
-      @client.put("/keys/#{URI.encode(id.to_s)}", nil, params, "Content-Type" => "application/json")
+    def update(key, params)
+      @client.put("/keys/#{URI.encode(key.to_s)}", nil, params, "Content-Type" => "application/json")
     end
 
     # Regenerate an API Key token
-    def regenerate(id)
-      @client.post("/keys/#{URI.encode(id.to_s)}/regenerate", nil, {})
+    def regenerate(key)
+      @client.post("/keys/#{URI.encode(key.to_s)}/regenerate", nil, {})
     end
   end
 end
