@@ -41,7 +41,7 @@ class M2X
     # Update API Key properties
     #
     # This method accepts the same parameters as create API Key and
-    # has the same valkeyations. Note that the Key token cannot be
+    # has the same validations. Note that the Key token cannot be
     # updated through this method.
     def update(key, params)
       @client.put("/keys/#{URI.encode(key.to_s)}", nil, params, "Content-Type" => "application/json")
