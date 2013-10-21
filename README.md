@@ -65,6 +65,8 @@ This gem aims to adhere to [Semantic Versioning 2.0.0](http://semver.org/). As a
 
 Additional labels for pre-release and build metadata are available as extensions to the `MAJOR.MINOR.PATCH` format.
 
+**Note**: the client version does not necessarily reflect the version used in the AT&T M2X API.
+
 ## License
 
 This gem is delivered under the MIT license. See [LICENSE](LICENSE) for the terms.
