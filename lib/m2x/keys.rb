@@ -48,6 +48,10 @@ class M2X
     end
 
     # Regenerate an API Key token
+    #
+    # Note that if you regenerate the key that you're using for
+    # authentication then you would need to change your scripts to
+    # start using the new key token for all subsequent requests.
     def regenerate(key)
       @client.post("/keys/#{URI.encode(key.to_s)}/regenerate", nil, {})
     end
