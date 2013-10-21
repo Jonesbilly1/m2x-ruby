@@ -18,7 +18,7 @@ For all other terms used in this documentation, see the [official glossary](http
 
 ## Example Usage
 
-In order to be able to use this gem you will need an [AT&T M2X](https://m2x.att.com/) account to obtain an API key. Once registered and with your account activated, create a new [Data Source Blueprint](https://m2x.att.com/blueprints), and copy the `Feed ID` and `API Key` values. The following script will send your CPU load average to three different streams named `load_1m`, `load_5m` and `load_15`. Check that there's no need to create a stream in order to write values into it:
+In order to be able to use this gem you will need an [AT&T M2X](https://m2x.att.com/) API key and a Data Source ID. If you don't have an API key, create an account and, once registered and with your account activated, create a new [Data Source Blueprint](https://m2x.att.com/blueprints), and copy the `Feed ID` and `API Key` values. The following script will send your CPU load average to three different streams named `load_1m`, `load_5m` and `load_15`. Check that there's no need to create a stream in order to write values into it:
 
     #! /usr/bin/env ruby
 
