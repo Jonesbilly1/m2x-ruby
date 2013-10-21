@@ -1,5 +1,6 @@
 require_relative "m2x/client"
 require_relative "m2x/keys"
+require_relative "m2x/feeds"
 
 class M2X
   VERSION = "0.0.1"
@@ -22,5 +23,9 @@ class M2X
 
   def keys
     @keys ||= ::M2X::Keys.new(client)
+  end
+
+  def feeds
+    @feeds ||= ::M2X::Feeds.new(client)
   end
 end
