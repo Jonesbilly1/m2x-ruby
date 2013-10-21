@@ -59,7 +59,7 @@ You can find the script in [`examples/m2x-uptime.rb`](examples/m2x-uptime.rb).
 
 This gem aims to adhere to [Semantic Versioning 2.0.0](http://semver.org/). As a summary, given a version number `MAJOR.MINOR.PATCH`:
 
-1. `MAJOR` will increment when incompatible API changes are introduced.
+1. `MAJOR` will increment when backwards-incompatible changes are introduced to the client.
 2. `MINOR` will increment when backwards-compatible functionality is added.
 3. `PATCH` will increment with backwards-compatible bug fixes.
 
