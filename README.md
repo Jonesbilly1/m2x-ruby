@@ -10,7 +10,7 @@ This gem aims to provide a simple wrapper to interact with [AT&T M2X API](https:
 
 An API key is a automatically generated token associated with your AT&T M2X account. Whenever you create an account you will be assigned a _Primary API Master Key_. This key cannot be edited nor deleted and will give you full access to the whole API. It is recommendable to [create a new Master API Key](https://m2x.att.com/account#master-keys-tab).
 
-Each Data Source that you create comes by default with a _Data Source API Key_ that has full access to it and cannot be edited nor deleted. As with Master Keys, it is recommendable to create a new one from the Data Source details page, under the _API Keys_ tab. This keys are valid to access only to resources on the given Data Source. As an additional level of permission, you can create a _Data Source Stream API Key_ that can only access to the selected Stream under that Data Source.
+Each Data Source that you create comes by default with a _Data Source API Key_ that has full access to it and cannot be edited nor deleted. As with Master Keys, it is recommendable to create a new one from the Data Source details page, under the _API Keys_ tab. These keys can only access resources from the given Data Source. As an additional level of permission, you can create a _Data Source Stream API Key_ that can only access the selected Stream under that Data Source.
 
 ### Other terms
 
