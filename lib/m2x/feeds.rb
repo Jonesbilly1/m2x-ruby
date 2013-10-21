@@ -36,7 +36,7 @@ class M2X
       @client.get("/feeds/#{URI.encode(id)}/streams/#{URI.encode(name)}/values")
     end
 
-    def stream_put(id, name, params)
+    def update_stream(id, name, params)
       @client.put("/feeds/#{URI.encode(id)}/streams/#{URI.encode(name)}", {}, params)
     end
 
