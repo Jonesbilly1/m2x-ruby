@@ -16,22 +16,44 @@ Each Data Source that you create comes by default with a _Data Source API Key_ t
 
 For all other terms used in this documentation, see the [official glossary](https://m2x.att.com/developer/documentation/glossary).
 
-## Usage
+## Example Usage
 
-In order to be able to use this gem you will need an [AT&T M2X](https://m2x.att.com/) account to obtain an API key.
+In order to be able to use this gem you will need an [AT&T M2X](https://m2x.att.com/) account to obtain an API key. Once registered and with your account activated, create a new [Data Source Blueprint](https://m2x.att.com/blueprints), and copy the `Feed ID` and `API Key` values. The following script will send your CPU load average to three different streams named `load_1m`, `load_5m` and `load_15`. Check that there's no need to create a stream in order to write values into it:
 
-	require "m2x"
-	
-	m2x = M2X.new("<YOUR-API-KEY>")
-	
-	# List all your keys
-	keys = m2x.keys.list.json["keys"]
-	
-	keys.each do |key|
-	  puts key["name"]
-	  puts key["key"]
-	  puts key["permissions"]
-	end
+    #! /usr/bin/env ruby
+
+    #
+    # See https://github.com/attm2x/m2x-ruby/blob/master/README.md#example-usage
+    # for instructions
+    #
+
+    require "m2x"
+
+    API_KEY = "<YOUR-FEED-API-KEY>"
+    FEED    = "<YOUR-FEED-ID>"
+
+    m2x = M2X.new(API_KEY)
+
+    @run = true
+    trap(:INT) { @run = false }
+
+    # Match `uptime` load averages output for both Linux and OSX
+    UPTIME_RE = /(\d+\.\d+),? (\d+\.\d+),? (\d+\.\d+)$/
+
+    while @run
+      load_1m, load_5m, load_15m = `uptime`.match(UPTIME_RE).captures
+
+      # Write the different values into AT&T M2X
+      m2x.feeds.stream_put(FEED, "load_1m",  value: load_1m)
+      m2x.feeds.stream_put(FEED, "load_5m",  value: load_5m)
+      m2x.feeds.stream_put(FEED, "load_15m", value: load_15m)
+
+      sleep 1
+    end
+
+    puts
+
+You can find the script in [`examples/m2x-uptime.rb`](examples/m2x-uptime.rb).
 
 ## Versioning
 
