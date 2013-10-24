@@ -39,11 +39,6 @@ class M2X
       @client.put("/feeds/#{URI.encode(id)}/location", nil, params)
     end
 
-    # Delete the current feed location
-    def delete_location(id)
-      @client.delete("/feeds/#{URI.encode(id)}/location")
-    end
-
     # Return a list of the associated streams for the supplied feed
     def streams(id)
       @client.get("/feeds/#{URI.encode(id)}/streams")
