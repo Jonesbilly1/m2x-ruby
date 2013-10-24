@@ -2,19 +2,7 @@
 
 [AT&T’s M2X](https://m2x.att.com/) is a cloud-based fully managed data storage service for network connected machine-to-machine (M2M) devices. From trucks and turbines to vending machines and freight containers, M2X enables the devices that power your business to connect and share valuable data.
 
-This gem aims to provide a simple wrapper to interact with [AT&T M2X API](https://m2x.att.com/developer/documentation/overview).
-
-## Glossary
-
-### API key
-
-An API key is a automatically generated token associated with your AT&T M2X account. Whenever you create an account you will be assigned a _Primary API Master Key_. This key cannot be edited nor deleted and will give you full access to the whole API. It is recommendable to [create a new Master API Key](https://m2x.att.com/account#master-keys-tab).
-
-Each Data Source that you create comes by default with a _Data Source API Key_ that has full access to it and cannot be edited nor deleted. As with Master Keys, it is recommendable to create a new one from the Data Source details page, under the _API Keys_ tab. These keys can only access resources from the given Data Source. As an additional level of permission, you can create a _Data Source Stream API Key_ that can only access the selected Stream under that Data Source.
-
-### Other terms
-
-For all other terms used in this documentation, see the [official glossary](https://m2x.att.com/developer/documentation/glossary).
+This gem aims to provide a simple wrapper to interact with [AT&T M2X API](https://m2x.att.com/developer/documentation/overview). Refer to the [Glossary of Terms](https://m2x.att.com/developer/documentation/glossary) to understand the nomenclature used through this documentation.
 
 ## Example Usage
 
