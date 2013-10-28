@@ -6,11 +6,9 @@ class M2X
   class Client
     API_BASE = "http://api-m2x.att.com/v1".freeze
 
-    VERSION = "0.0.1".freeze
-
     CA_FILE = File.expand_path("../cacert.pem", __FILE__)
 
-    USER_AGENT = "M2X/#{VERSION} (Ruby Net::HTTP)".freeze
+    USER_AGENT = "M2X/#{::M2X::VERSION} (Ruby Net::HTTP)".freeze
 
     def initialize(api_key=nil, api_base=nil)
       @api_base = api_base
