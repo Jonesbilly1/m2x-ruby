@@ -44,6 +44,11 @@ class M2X
       @client.get("/feeds/#{URI.encode(id)}/streams")
     end
 
+    # Return the details of the supplied stream
+    def stream(id, name)
+      @client.get("/feeds/#{URI.encode(id)}/streams/#{URI.encode(name)}")
+    end
+
     # Return a list with the latest values from a stream
     def stream_values(id, name)
       @client.get("/feeds/#{URI.encode(id)}/streams/#{URI.encode(name)}/values")
