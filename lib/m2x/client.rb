@@ -89,7 +89,7 @@ class M2X
     def default_headers
       @headers ||= begin
                      headers = { "User-Agent" => USER_AGENT }
-                     headers = { "X-M2X-KEY" => @api_key } if @api_key
+                     headers.merge!("X-M2X-KEY" => @api_key) if @api_key
                      headers
                    end
     end
