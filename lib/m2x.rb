@@ -1,10 +1,9 @@
+require_relative "m2x/version"
 require_relative "m2x/client"
 require_relative "m2x/keys"
 require_relative "m2x/feeds"
 
 class M2X
-  VERSION = "0.0.2"
-
   attr_reader :api_base
   attr_reader :api_key
 
