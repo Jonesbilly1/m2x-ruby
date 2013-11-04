@@ -4,6 +4,15 @@
 
 This gem aims to provide a simple wrapper to interact with [AT&T M2X API](https://m2x.att.com/developer/documentation/overview). Refer to the [Glossary of Terms](https://m2x.att.com/developer/documentation/glossary) to understand the nomenclature used through this documentation.
 
+
+Getting Started
+==========================
+1. Signup for an [M2X Account](https://m2x.att.com/signup).
+2. Obtain your _Master Key_ from the Master Keys tab of your [Account Settings](https://m2x.att.com/account) screen.
+2. Create your first [Data Source Blueprint](https://m2x.att.com/blueprints) and copy its _Feed ID_.
+3. Review the [M2X API Documentation](https://m2x.att.com/developer/documentation/overview).
+
+
 ## Example Usage
 
 In order to be able to use this gem you will need an [AT&T M2X](https://m2x.att.com/) API key and a Data Source ID. If you don't have an API key, create an account and, once registered and with your account activated, create a new [Data Source Blueprint](https://m2x.att.com/blueprints), and copy the `Feed ID` and `API Key` values. The following script will send your CPU load average to three different streams named `load_1m`, `load_5m` and `load_15`. Check that there's no need to create a stream in order to write values into it:
