@@ -18,13 +18,30 @@ trap(:INT) { @run = false }
 # Match `uptime` load averages output for both Linux and OSX
 UPTIME_RE = /(\d+\.\d+),? (\d+\.\d+),? (\d+\.\d+)$/
 
+def load_avg
+  `uptime`.match(UPTIME_RE).captures
+end
+
+# Create the streams if they don't exist
+load_1m, load_5m, load_15m = load_avg
+
+m2x.feeds.update_stream(FEED, "load_1m",  value: load_1m)
+m2x.feeds.update_stream(FEED, "load_5m",  value: load_5m)
+m2x.feeds.update_stream(FEED, "load_15m", value: load_15m)
+
 while @run
-  load_1m, load_5m, load_15m = `uptime`.match(UPTIME_RE).captures
+  load_1m, load_5m, load_15m = load_avg
 
   # Write the different values into AT&T M2X
-  m2x.feeds.update_stream(FEED, "load_1m",  value: load_1m)
-  m2x.feeds.update_stream(FEED, "load_5m",  value: load_5m)
-  m2x.feeds.update_stream(FEED, "load_15m", value: load_15m)
+  values = {
+    load_1m:  [ { value: load_1m } ],
+    load_5m:  [ { value: load_5m } ],
+    load_15m: [ { value: load_15m } ]
+  }
+
+  res = m2x.feeds.post_multiple(FEED, values)
+
+  abort res.json["message"] unless res.code == 204
 
   sleep 1
 end
