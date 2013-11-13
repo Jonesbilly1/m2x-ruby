@@ -86,6 +86,28 @@ class M2X
       keys_api.update(key, params.merge(feed: id))
     end
 
+    # Post multiple values to multiple streams
+    #
+    # This method allows posting multiple values to multiple streams
+    # belonging to a feed. All the streams should be created before
+    # posting values using this method. The `values` parameters is a
+    # hash with the following format:
+    #
+    #    {
+    #      "stream-name-1": [
+    #        { "at": <Time in ISO8601>, "value": x },
+    #        { "value": y }
+    #      ],
+    #      "stream-name-2": [ ... ]
+    #    }
+    #
+    # If the `at` attribute is missing the the current time of the
+    # server, in UTC, will be used.
+    def post_multiple(id, values)
+      params = { values: values }
+      @client.post("/feeds/#{URI.encode(id)}", nil, params, "Content-Type" => "application/json")
+    end
+
     private
 
     def keys_api
