@@ -12,9 +12,10 @@ class M2X
 
     # List all the feeds that belong to the user associated with the
     # M2X API key supplied when initializing M2X
-    def list
-      @client.get("/feeds")
+    def list(params={})
+      @client.get("/feeds", params)
     end
+    alias_method :search, :list
 
     # Return the details of the supplied feed
     def view(id)
