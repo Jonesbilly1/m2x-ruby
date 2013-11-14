@@ -10,8 +10,20 @@ class M2X
       @client = client
     end
 
-    # List all the feeds that belong to the user associated with the
-    # M2X API key supplied when initializing M2X
+    # List/search all the feeds that belong to the user associated
+    # with the M2X API key supplied when initializing M2X
+    #
+    # The list of feeds can be filtered by using one or more of the
+    # following optional parameters:
+    #
+    # * `q` text to search, matching the name and description.
+    # * `type` one of `bleuprint`, `batch` and `datasource`.
+    # * `tags` a comma separated list of tags.
+    # * `limit` how many results per page.
+    # * `page` the specific results page, starting by 1.
+    # * `latitude` and `longitude` for searching feeds geographically.
+    # * `distance` numeric value in `distance_unit`.
+    # * `distance_unit` either `miles`, `mi` or `km`.
     def list(params={})
       @client.get("/feeds", params)
     end
