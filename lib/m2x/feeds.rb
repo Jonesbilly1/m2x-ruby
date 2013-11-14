@@ -62,9 +62,22 @@ class M2X
       @client.get("/feeds/#{URI.encode(id)}/streams/#{URI.encode(name)}")
     end
 
-    # Return a list with the latest values from a stream
-    def stream_values(id, name)
-      @client.get("/feeds/#{URI.encode(id)}/streams/#{URI.encode(name)}/values")
+    # List values from an existing data stream associated with a
+    # specific feed, sorted in reverse chronological order (most
+    # recent values first).
+    #
+    # The values can be filtered by using one or more of the following
+    # optional parameters:
+    #
+    # * `start` An ISO 8601 timestamp specifying the start of the date
+    # * range to be considered.
+    #
+    # * `end` An ISO 8601 timestamp specifying the end of the date
+    # * range to be considered.
+    #
+    # * `limit` Maximum number of values to return.
+    def stream_values(id, name, params={})
+      @client.get("/feeds/#{URI.encode(id)}/streams/#{URI.encode(name)}/values", params)
     end
 
     # Update stream's properties
