@@ -27,4 +27,16 @@ class M2X
   def feeds
     @feeds ||= ::M2X::Feeds.new(client)
   end
+
+  def blueprints
+    @blueprints ||= ::M2X::Blueprints.new(client)
+  end
+
+  def datasources
+    @datasources ||= ::M2X::Datasources.new(client)
+  end
+
+  def batches
+    @batches ||= ::M2X::Batches.new(client)
+  end
 end
