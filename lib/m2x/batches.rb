@@ -36,7 +36,7 @@ class M2X
     # * `description` containing a longer description (optional).
     # * `tags` a comma separated string of tags (optional).
     def create(params={})
-      @client.post("/batches", nil, extras.merge(name: name))
+      @client.post("/batches", nil, params)
     end
 
     # Retrieve information about an existing data source batch
@@ -53,7 +53,7 @@ class M2X
     # * `description` containing a longer description (optional).
     # * `tags` a comma separated string of tags (optional).
     def update(id, params={})
-      @client.put("/batches/#{URI.encode(id)}", nil, extras.merge(name: name))
+      @client.put("/batches/#{URI.encode(id)}", nil, params)
     end
 
     # List/search all data sources in the batch

@@ -36,7 +36,7 @@ class M2X
     # * `description` containing a longer description (optional).
     # * `tags` a comma separated string of tags (optional).
     def create(params={})
-      @client.post("/datasources", nil, extras.merge(name: name))
+      @client.post("/datasources", nil, params)
     end
 
     # Retrieve information about an existing data source
@@ -53,7 +53,7 @@ class M2X
     # * `description` containing a longer description (optional).
     # * `tags` a comma separated string of tags (optional).
     def update(id, params={})
-      @client.put("/datasources/#{URI.encode(id)}", nil, extras.merge(name: name))
+      @client.put("/datasources/#{URI.encode(id)}", nil, params)
     end
 
     # Delete an existing data source
