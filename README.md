@@ -66,4 +66,4 @@ Additional labels for pre-release and build metadata are available as extensions
 
 ## License
 
-This gem is delivered under the MIT license. See [LICENSE](LICENSE) for the terms.
+This gem is provided under the MIT license. See [LICENSE](LICENSE) for applicable terms.
