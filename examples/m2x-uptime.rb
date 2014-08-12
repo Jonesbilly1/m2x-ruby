@@ -23,20 +23,20 @@ def load_avg
 end
 
 # Create the streams if they don't exist
-load_1m, load_5m, load_15m = load_avg
-
-m2x.feeds.update_stream(FEED, "load_1m",  value: load_1m)
-m2x.feeds.update_stream(FEED, "load_5m",  value: load_5m)
-m2x.feeds.update_stream(FEED, "load_15m", value: load_15m)
+m2x.feeds.update_stream(FEED, "load_1m")
+m2x.feeds.update_stream(FEED, "load_5m")
+m2x.feeds.update_stream(FEED, "load_15m")
 
 while @run
   load_1m, load_5m, load_15m = load_avg
 
   # Write the different values into AT&T M2X
+  now = Time.now.iso8601
+
   values = {
-    load_1m:  [ { value: load_1m } ],
-    load_5m:  [ { value: load_5m } ],
-    load_15m: [ { value: load_15m } ]
+    load_1m:  [ { value: load_1m, at: now } ],
+    load_5m:  [ { value: load_5m, at: now } ],
+    load_15m: [ { value: load_15m, at: now } ]
   }
 
   res = m2x.feeds.post_multiple(FEED, values)

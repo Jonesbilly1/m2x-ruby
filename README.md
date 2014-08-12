@@ -17,38 +17,58 @@ Getting Started
 
 In order to be able to use this gem you will need an [AT&T M2X](https://m2x.att.com/) API key and a Data Source ID. If you don't have an API key, create an account and, once registered and with your account activated, create a new [Data Source Blueprint](https://m2x.att.com/blueprints), and copy the `Feed ID` and `API Key` values. The following script will send your CPU load average to three different streams named `load_1m`, `load_5m` and `load_15`. Check that there's no need to create a stream in order to write values into it:
 
-    #! /usr/bin/env ruby
+```ruby
+#! /usr/bin/env ruby
 
-    #
-    # See https://github.com/attm2x/m2x-ruby/blob/master/README.md#example-usage
-    # for instructions
-    #
+#
+# See https://github.com/attm2x/m2x-ruby/blob/master/README.md#example-usage
+# for instructions
+#
 
-    require "m2x"
+require "m2x"
 
-    API_KEY = "<YOUR-FEED-API-KEY>"
-    FEED    = "<YOUR-FEED-ID>"
+API_KEY = "<YOUR-FEED-API-KEY>"
+FEED    = "<YOUR-FEED-ID>"
 
-    m2x = M2X.new(API_KEY)
+m2x = M2X.new(API_KEY)
 
-    @run = true
-    trap(:INT) { @run = false }
+@run = true
+trap(:INT) { @run = false }
 
-    # Match `uptime` load averages output for both Linux and OSX
-    UPTIME_RE = /(\d+\.\d+),? (\d+\.\d+),? (\d+\.\d+)$/
+# Match `uptime` load averages output for both Linux and OSX
+UPTIME_RE = /(\d+\.\d+),? (\d+\.\d+),? (\d+\.\d+)$/
 
-    while @run
-      load_1m, load_5m, load_15m = `uptime`.match(UPTIME_RE).captures
+def load_avg
+  `uptime`.match(UPTIME_RE).captures
+end
 
-      # Write the different values into AT&T M2X
-      m2x.feeds.update_stream(FEED, "load_1m",  value: load_1m)
-      m2x.feeds.update_stream(FEED, "load_5m",  value: load_5m)
-      m2x.feeds.update_stream(FEED, "load_15m", value: load_15m)
+# Create the streams if they don't exist
+m2x.feeds.update_stream(FEED, "load_1m")
+m2x.feeds.update_stream(FEED, "load_5m")
+m2x.feeds.update_stream(FEED, "load_15m")
 
-      sleep 1
-    end
+while @run
+  load_1m, load_5m, load_15m = load_avg
 
-    puts
+  # Write the different values into AT&T M2X
+  now = Time.now.iso8601
+
+  values = {
+    load_1m:  [ { value: load_1m, at: now } ],
+    load_5m:  [ { value: load_5m, at: now } ],
+    load_15m: [ { value: load_15m, at: now } ]
+  }
+
+  res = m2x.feeds.post_multiple(FEED, values)
+
+  abort res.json["message"] unless res.code == 204
+
+  sleep 1
+end
+
+puts
+
+```
 
 You can find the script in [`examples/m2x-uptime.rb`](examples/m2x-uptime.rb).
 
