@@ -85,7 +85,7 @@ class M2X
     # If the stream doesn't exist it will create it. See
     # https://m2x.att.com/developer/documentation/feed#Create-Update-Data-Stream
     # for details.
-    def update_stream(id, name, params)
+    def update_stream(id, name, params={})
       @client.put("/feeds/#{URI.encode(id)}/streams/#{URI.encode(name)}", {}, params)
     end
 
