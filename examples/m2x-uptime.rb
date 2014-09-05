@@ -42,7 +42,7 @@ while @run
 
   res = m2x.feeds.post_multiple(FEED, values)
 
-  abort res.json["message"] unless res.code == 204
+  abort res.json["message"] unless res.code == 202
 
   sleep 1
 end
