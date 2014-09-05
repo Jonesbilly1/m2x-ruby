@@ -25,6 +25,7 @@ In order to be able to use this gem you will need an [AT&T M2X](https://m2x.att.
 # for instructions
 #
 
+require "time"
 require "m2x"
 
 API_KEY = "<YOUR-FEED-API-KEY>"
@@ -61,7 +62,7 @@ while @run
 
   res = m2x.feeds.post_multiple(FEED, values)
 
-  abort res.json["message"] unless res.code == 204
+  abort res.json["message"] unless res.code == 202
 
   sleep 1
 end
