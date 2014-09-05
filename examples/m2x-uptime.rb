@@ -5,6 +5,7 @@
 # for instructions
 #
 
+require "time"
 require "m2x"
 
 API_KEY = "<YOUR-FEED-API-KEY>"
