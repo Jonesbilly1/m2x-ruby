@@ -94,6 +94,16 @@ class M2X
       @client.get("/feeds/#{URI.encode(id)}/streams/#{URI.encode(name)}/values", params)
     end
 
+    # Sample values from an existing data stream associated with a specific
+    # feed, sorted in reverse chronological order (most recent values first).
+    #
+    # This method only works for numeric streams
+    #
+    # Refer to the sampling endpoint documentation for allowed parameters
+    def stream_sampling(id, name, params={})
+      @client.get("/feeds/#{URI.encode(id)}/streams/#{URI.encode(name)}/sampling", params)
+    end
+
     # Update the current value of the specified stream. The timestamp
     # is optional. If ommited, the current server time will be used
     def update_stream_value(id, name, value, timestamp=nil)
