@@ -94,6 +94,16 @@ class M2X
       @client.get("/feeds/#{URI.encode(id)}/streams/#{URI.encode(name)}/values", params)
     end
 
+    # Update the current value of the specified stream. The timestamp
+    # is optional. If ommited, the current server time will be used
+    def update_stream_value(id, name, value, timestamp=nil)
+      params = { value: value }
+
+      params[:at] = timestamp if timestamp
+
+      @client.put("/feeds/#{URI.encode(id)}/streams/#{URI.encode(name)}/value", {}, params)
+    end
+
     # Post multiple values to multiple streams
     #
     # This method allows posting multiple values to multiple streams
