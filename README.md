@@ -18,7 +18,43 @@ Getting Started
 $ gem install m2x
 ```
 
-## Example Usage
+## Usage
+
+In order to communicate with the M2X API, you need an instance of [M2X](lib/m2x.rb). You need to pass your API key in the constructor to access your data.
+
+```ruby
+m2x = M2X.new(<YOUR-API-KEY>)
+```
+
+This provides an interface to your data on M2X
+
+- [Blueprints](lib/m2x/blueprints.rb)
+  ```ruby
+  blueprints_api = m2x.blueprints
+  ```
+
+- [Batches](lib/m2x/batches.rb)
+  ```ruby
+  batches_api = m2x.batches
+  ```
+- [Datasources](lib/m2x/datasources.rb)
+  ```ruby
+  datasources_api = m2x.datasources
+  ```
+
+- [Feeds](lib/m2x/feeds.rb)
+  ```ruby
+  feeds_api = m2x.feeds
+  ```
+
+- [Keys](lib/m2x/keys.rb)
+  ```ruby
+  keys_api = m2x.keys
+  ```
+
+Refer to the documentation on each class for further usage instructions.
+
+## Example
 
 In order to be able to use this gem you will need an [AT&T M2X](https://m2x.att.com/) API key and a Data Source ID. If you don't have an API key, create an account and, once registered and with your account activated, create a new [Data Source Blueprint](https://m2x.att.com/blueprints), and copy the `Feed ID` and `API Key` values. The following script will send your CPU load average to three different streams named `load_1m`, `load_5m` and `load_15`. Check that there's no need to create a stream in order to write values into it:
 
