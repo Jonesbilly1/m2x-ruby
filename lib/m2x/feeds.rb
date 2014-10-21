@@ -101,7 +101,7 @@ class M2X
 
       params[:at] = timestamp if timestamp
 
-      @client.put("/feeds/#{URI.encode(id)}/streams/#{URI.encode(name)}/value", {}, params)
+      @client.put("/feeds/#{URI.encode(id)}/streams/#{URI.encode(name)}/value", nil, params, "Content-Type" => "application/json")
     end
 
     # Post multiple values to a single stream
