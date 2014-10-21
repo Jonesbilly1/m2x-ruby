@@ -62,6 +62,20 @@ class M2X
       @client.get("/feeds/#{URI.encode(id)}/streams/#{URI.encode(name)}")
     end
 
+    # Update stream's properties
+    #
+    # If the stream doesn't exist it will create it. See
+    # https://m2x.att.com/developer/documentation/feed#Create-Update-Data-Stream
+    # for details.
+    def update_stream(id, name, params={})
+      @client.put("/feeds/#{URI.encode(id)}/streams/#{URI.encode(name)}", {}, params)
+    end
+
+    # Delete the stream (and all its values) from the feed
+    def delete_stream(id, name)
+      @client.delete("/feeds/#{URI.encode(id)}/streams/#{URI.encode(name)}")
+    end
+
     # List values from an existing data stream associated with a
     # specific feed, sorted in reverse chronological order (most
     # recent values first).
@@ -78,38 +92,6 @@ class M2X
     # * `limit` Maximum number of values to return.
     def stream_values(id, name, params={})
       @client.get("/feeds/#{URI.encode(id)}/streams/#{URI.encode(name)}/values", params)
-    end
-
-    # Update stream's properties
-    #
-    # If the stream doesn't exist it will create it. See
-    # https://m2x.att.com/developer/documentation/feed#Create-Update-Data-Stream
-    # for details.
-    def update_stream(id, name, params={})
-      @client.put("/feeds/#{URI.encode(id)}/streams/#{URI.encode(name)}", {}, params)
-    end
-
-    # Delete the stream (and all its values) from the feed
-    def delete_stream(id, name)
-      @client.delete("/feeds/#{URI.encode(id)}/streams/#{URI.encode(name)}")
-    end
-
-    # Returns a list of API keys associated with the feed
-    def keys(id)
-      @client.get("/keys", feed: id)
-    end
-
-    # Creates a new API key associated to the feed
-    #
-    # If a parameter named `stream` is supplied with a stream name, it
-    # will create an API key associated with that stream only.
-    def create_key(id, params)
-      keys_api.create(params.merge(feed: id))
-    end
-
-    # Updates an API key properties
-    def update_key(id, key, params)
-      keys_api.update(key, params.merge(feed: id))
     end
 
     # Post multiple values to multiple streams
@@ -132,6 +114,24 @@ class M2X
     def post_multiple(id, values)
       params = { values: values }
       @client.post("/feeds/#{URI.encode(id)}", nil, params, "Content-Type" => "application/json")
+    end
+
+    # Returns a list of API keys associated with the feed
+    def keys(id)
+      @client.get("/keys", feed: id)
+    end
+
+    # Creates a new API key associated to the feed
+    #
+    # If a parameter named `stream` is supplied with a stream name, it
+    # will create an API key associated with that stream only.
+    def create_key(id, params)
+      keys_api.create(params.merge(feed: id))
+    end
+
+    # Updates an API key properties
+    def update_key(id, key, params)
+      keys_api.update(key, params.merge(feed: id))
     end
 
     private
