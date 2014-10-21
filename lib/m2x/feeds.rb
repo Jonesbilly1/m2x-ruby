@@ -104,6 +104,23 @@ class M2X
       @client.put("/feeds/#{URI.encode(id)}/streams/#{URI.encode(name)}/value", {}, params)
     end
 
+    # Post multiple values to a single stream
+    #
+    # This method allows posting multiple values to a stream
+    # belonging to a feed. The stream should be created before
+    # posting values using this method. The `values` parameter is a
+    # hash with the following format:
+    #
+    #     {
+    #       { "at": <Time in ISO8601>, "value": x },
+    #       { "at": <Time in ISO8601>, "value": y },
+    #       [ ... ]
+    #     }
+    def post_stream_values(id, name, values)
+      params = { values: values }
+      @client.post("/feeds/#{URI.encode(id)}/streams/#{URI.encode(name)}/values", nil, params, "Content-Type" => "application/json")
+    end
+
     # Post multiple values to multiple streams
     #
     # This method allows posting multiple values to multiple streams
