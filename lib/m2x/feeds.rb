@@ -15,17 +15,7 @@ class M2X
     # public, allowing only to read their metadata, locations, list
     # its streams, view each stream metadata and its values.
     #
-    # The list of feeds can be filtered by using one or more of the
-    # following optional parameters:
-    #
-    # * `q` text to search, matching the name and description.
-    # * `type` one of `bleuprint`, `batch` and `datasource`.
-    # * `tags` a comma separated list of tags.
-    # * `limit` how many results per page.
-    # * `page` the specific results page, starting by 1.
-    # * `latitude` and `longitude` for searching feeds geographically.
-    # * `distance` numeric value in `distance_unit`.
-    # * `distance_unit` either `miles`, `mi` or `km`.
+    # Refer to the feed documentation for the full list of supported parameters
     def catalog(params={})
       @client.get("/feeds/catalog", params)
     end
@@ -33,17 +23,7 @@ class M2X
     # List/search all the feeds that belong to the user associated
     # with the M2X API key supplied when initializing M2X
     #
-    # The list of feeds can be filtered by using one or more of the
-    # following optional parameters:
-    #
-    # * `q` text to search, matching the name and description.
-    # * `type` one of `bleuprint`, `batch` and `datasource`.
-    # * `tags` a comma separated list of tags.
-    # * `limit` how many results per page.
-    # * `page` the specific results page, starting by 1.
-    # * `latitude` and `longitude` for searching feeds geographically.
-    # * `distance` numeric value in `distance_unit`.
-    # * `distance_unit` either `miles`, `mi` or `km`.
+    # Refer to the feed documentation for the full list of supported parameters
     def list(params={})
       @client.get("/feeds", params)
     end
