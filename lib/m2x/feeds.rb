@@ -121,6 +121,13 @@ class M2X
       @client.post("/feeds/#{URI.encode(id)}/streams/#{URI.encode(name)}/values", nil, params, "Content-Type" => "application/json")
     end
 
+    # Delete values in a stream by a date range
+    # The `start` and `stop` parameters should be ISO8601 timestamps
+    def delete_stream_values(id, name, start, stop)
+      params = { from: start, end: stop }
+      @client.delete("/feeds/#{URI.encode(id)}/streams/#{URI.encode(name)}/values", nil, params, "Content-Type" => "application/json")
+    end
+
     # Post multiple values to multiple streams
     #
     # This method allows posting multiple values to multiple streams
