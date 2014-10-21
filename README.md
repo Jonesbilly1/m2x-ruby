@@ -12,6 +12,11 @@ Getting Started
 2. Create your first [Data Source Blueprint](https://m2x.att.com/blueprints) and copy its _Feed ID_.
 3. Review the [M2X API Documentation](https://m2x.att.com/developer/documentation/overview).
 
+## Installation
+
+```bash
+$ gem install m2x
+```
 
 ## Example Usage
 
