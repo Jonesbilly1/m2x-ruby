@@ -104,6 +104,16 @@ class M2X
       @client.get("/feeds/#{URI.encode(id)}/streams/#{URI.encode(name)}/sampling", params)
     end
 
+    # Return count, min, max, average and standard deviation stats for the
+    # values on an existing data stream.
+    #
+    # This method only works for numeric streams
+    #
+    # Refer to the stats endpoint documentation for allowed parameters
+    def stream_stats(id, name, params={})
+      @client.get("/feeds/#{URI.encode(id)}/streams/#{URI.encode(name)}/stats", params)
+    end
+
     # Update the current value of the specified stream. The timestamp
     # is optional. If ommited, the current server time will be used
     def update_stream_value(id, name, value, timestamp=nil)
