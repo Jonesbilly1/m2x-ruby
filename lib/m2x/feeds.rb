@@ -131,13 +131,10 @@ class M2X
     #    {
     #      "stream-name-1": [
     #        { "at": <Time in ISO8601>, "value": x },
-    #        { "value": y }
+    #        { "at": <Time in ISO8601>, "value": y }
     #      ],
     #      "stream-name-2": [ ... ]
     #    }
-    #
-    # If the `at` attribute is missing the the current time of the
-    # server, in UTC, will be used.
     def post_multiple(id, values)
       params = { values: values }
       @client.post("/feeds/#{URI.encode(id)}", nil, params, "Content-Type" => "application/json")
