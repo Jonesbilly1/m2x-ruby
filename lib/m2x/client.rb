@@ -25,16 +25,8 @@ class M2X::Client
     @keys ||= M2X::Keys.new(self)
   end
 
-  def feeds
-    @feeds ||= M2X::Feeds.new(self)
-  end
-
-  def blueprints
-    @blueprints ||= M2X::Blueprints.new(self)
-  end
-
-  def datasources
-    @datasources ||= M2X::Datasources.new(self)
+  def devices
+    @devices ||= M2X::Devices.new(self)
   end
 
   def batches

@@ -9,7 +9,7 @@ Getting Started
 ==========================
 1. Signup for an [M2X Account](https://m2x.att.com/signup).
 2. Obtain your _Master Key_ from the Master Keys tab of your [Account Settings](https://m2x.att.com/account) screen.
-2. Create your first [Data Source Blueprint](https://m2x.att.com/blueprints) and copy its _Feed ID_.
+2. Create your first [Device](https://m2x.att.com/devices) and copy its _Device ID_.
 3. Review the [M2X API Documentation](https://m2x.att.com/developer/documentation/overview).
 
 ## Installation
@@ -28,23 +28,14 @@ m2x = M2X.new(<YOUR-API-KEY>)
 
 This provides an interface to your data on M2X
 
-- [Blueprints](lib/m2x/blueprints.rb)
-  ```ruby
-  blueprints_api = m2x.blueprints
-  ```
-
 - [Batches](lib/m2x/batches.rb)
   ```ruby
   batches_api = m2x.batches
   ```
-- [Datasources](lib/m2x/datasources.rb)
-  ```ruby
-  datasources_api = m2x.datasources
-  ```
 
-- [Feeds](lib/m2x/feeds.rb)
+- [Devices](lib/m2x/devices.rb)
   ```ruby
-  feeds_api = m2x.feeds
+  devices_api = m2x.devices
   ```
 
 - [Keys](lib/m2x/keys.rb)
@@ -56,7 +47,7 @@ Refer to the documentation on each class for further usage instructions.
 
 ## Example
 
-In order to run this example, you will need a `Feed ID` and `API Key`. If you don't have any, access your M2X account, create a new [Data Source Blueprint](https://m2x.att.com/blueprints), and copy the `Feed ID` and `API Key` values. The following script will send your CPU load average to three different streams named `load_1m`, `load_5m` and `load_15`. Check that there's no need to create a stream in order to write values into it:
+In order to run this example, you will need a `Device ID` and `API Key`. If you don't have any, access your M2X account, create a new [Device](https://m2x.att.com/devices), and copy the `Device ID` and `API Key` values. The following script will send your CPU load average to three different streams named `load_1m`, `load_5m` and `load_15`. Check that there's no need to create a stream in order to write values into it:
 
 ```ruby
 #! /usr/bin/env ruby
@@ -69,8 +60,8 @@ In order to run this example, you will need a `Feed ID` and `API Key`. If you do
 require "time"
 require "m2x"
 
-API_KEY = "<YOUR-FEED-API-KEY>"
-FEED    = "<YOUR-FEED-ID>"
+API_KEY = "<YOUR-DEVICE-API-KEY>"
+DEVICE    = "<YOUR-DEVICE-ID>"
 
 m2x = M2X.new(API_KEY)
 
@@ -85,9 +76,9 @@ def load_avg
 end
 
 # Create the streams if they don't exist
-m2x.feeds.update_stream(FEED, "load_1m")
-m2x.feeds.update_stream(FEED, "load_5m")
-m2x.feeds.update_stream(FEED, "load_15m")
+m2x.devices.update_stream(DEVICE, "load_1m")
+m2x.devices.update_stream(DEVICE, "load_5m")
+m2x.devices.update_stream(DEVICE, "load_15m")
 
 while @run
   load_1m, load_5m, load_15m = load_avg
@@ -101,7 +92,7 @@ while @run
     load_15m: [ { value: load_15m, at: now } ]
   }
 
-  res = m2x.feeds.post_multiple(FEED, values)
+  res = m2x.devices.post_multiple(DEVICE, values)
 
   abort res.json["message"] unless res.code == 202
 

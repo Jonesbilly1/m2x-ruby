@@ -29,7 +29,7 @@ class M2X::Keys
   # Create a new API Key
   #
   # Note that, according to the parameters sent, you can create a
-  # Master API Key or a Feed/Stream API Key. See
+  # Master API Key or a Device/Stream API Key. See
   # https://m2x.att.com/developer/documentation/keys#Create-Key for
   # details on the parameters accepted by this method.
   def create(params)

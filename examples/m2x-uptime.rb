@@ -8,8 +8,8 @@
 require "time"
 require "m2x"
 
-API_KEY = "<YOUR-FEED-API-KEY>"
-FEED    = "<YOUR-FEED-ID>"
+API_KEY = "<YOUR-DEVICE-API-KEY>"
+DEVICE    = "<YOUR-DEVICE-ID>"
 
 m2x = M2X.new(API_KEY)
 
@@ -24,9 +24,9 @@ def load_avg
 end
 
 # Create the streams if they don't exist
-m2x.feeds.update_stream(FEED, "load_1m")
-m2x.feeds.update_stream(FEED, "load_5m")
-m2x.feeds.update_stream(FEED, "load_15m")
+m2x.devices.update_stream(DEVICE, "load_1m")
+m2x.devices.update_stream(DEVICE, "load_5m")
+m2x.devices.update_stream(DEVICE, "load_15m")
 
 while @run
   load_1m, load_5m, load_15m = load_avg
@@ -40,7 +40,7 @@ while @run
     load_15m: [ { value: load_15m, at: now } ]
   }
 
-  res = m2x.feeds.post_multiple(FEED, values)
+  res = m2x.devices.post_multiple(DEVICE, values)
 
   abort res.json["message"] unless res.code == 202
 
