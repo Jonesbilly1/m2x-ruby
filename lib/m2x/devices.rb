@@ -176,7 +176,7 @@ class M2X::Devices
   #    }
   def post_multiple(id, values)
     params = { values: values }
-    @client.post("/devices/#{URI.encode(id)}", nil, params, "Content-Type" => "application/json")
+    @client.post("/devices/#{URI.encode(id)}/updates", nil, params, "Content-Type" => "application/json")
   end
 
   # Returns a list of API keys associated with the device
