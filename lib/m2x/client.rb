@@ -29,6 +29,10 @@ class M2X::Client
     @devices ||= M2X::Devices.new(self)
   end
 
+  def streams
+    @streams ||= M2X::Streams.new(self)
+  end
+
   def distributions
     @distributions ||= M2X::Distributions.new(self)
   end
