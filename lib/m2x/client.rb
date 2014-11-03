@@ -88,7 +88,7 @@ class M2X::Client
     end
 
     def status
-      @status ||= @status.code.to_i
+      @status ||= @response.code.to_i
     end
 
     def headers
