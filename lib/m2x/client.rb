@@ -87,12 +87,28 @@ class M2X::Client
       @json ||= ::JSON.parse(raw)
     end
 
-    def code
-      @code ||= @response.code.to_i
+    def status
+      @status ||= @status.code.to_i
     end
 
     def headers
       @headers ||= @response.to_hash
+    end
+
+    def success?
+      (200..299).include?(status)
+    end
+
+    def client_error?
+      (400..499).include?(status)
+    end
+
+    def server_error?
+      (500..599).include?(status)
+    end
+
+    def error?
+      client_error? || server_error?
     end
   end
 
