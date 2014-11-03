@@ -94,7 +94,7 @@ while @run
 
   res = m2x.devices.post_updates(DEVICE, values)
 
-  abort res.json["message"] unless res.code == 202
+  abort res.json["message"] unless res.success?
 
   sleep 1
 end
