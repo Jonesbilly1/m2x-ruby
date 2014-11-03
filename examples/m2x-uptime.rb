@@ -24,9 +24,9 @@ def load_avg
 end
 
 # Create the streams if they don't exist
-m2x.devices.update_stream(DEVICE, "load_1m")
-m2x.devices.update_stream(DEVICE, "load_5m")
-m2x.devices.update_stream(DEVICE, "load_15m")
+m2x.streams.update(DEVICE, "load_1m")
+m2x.streams.update(DEVICE, "load_5m")
+m2x.streams.update(DEVICE, "load_15m")
 
 while @run
   load_1m, load_5m, load_15m = load_avg
