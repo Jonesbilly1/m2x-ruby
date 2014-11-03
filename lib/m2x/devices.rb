@@ -31,7 +31,7 @@ class M2X::Devices
   #
   # Refer to the device documentation for the full list of supported parameters
   def create(params={})
-    @client.post("/devices", nil, params)
+    @client.post("/devices", nil, params, "Content-Type" => "application/json")
   end
 
   # Return the details of the supplied device
@@ -43,7 +43,7 @@ class M2X::Devices
   #
   # Refer to the device documentation for the full list of supported parameters
   def update(id, params={})
-    @client.put("/devices/#{URI.encode(id)}", nil, params)
+    @client.put("/devices/#{URI.encode(id)}", nil, params, "Content-Type" => "application/json")
   end
 
   # Return a list of access log to the supplied device
@@ -61,7 +61,7 @@ class M2X::Devices
 
   # Update the current location of the device
   def update_location(id, params)
-    @client.put("/devices/#{URI.encode(id)}/location", nil, params)
+    @client.put("/devices/#{URI.encode(id)}/location", nil, params, "Content-Type" => "application/json")
   end
 
   # Return a list of the associated streams for the supplied device
@@ -80,7 +80,7 @@ class M2X::Devices
   # https://m2x.att.com/developer/documentation/device#Create-Update-Data-Stream
   # for details.
   def update_stream(id, name, params={})
-    @client.put("/devices/#{URI.encode(id)}/streams/#{URI.encode(name)}", {}, params)
+    @client.put("/devices/#{URI.encode(id)}/streams/#{URI.encode(name)}", {}, params, "Content-Type" => "application/json")
   end
 
   # Delete the stream (and all its values) from the device

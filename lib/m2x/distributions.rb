@@ -34,7 +34,7 @@ class M2X::Distributions
   # * `description` containing a longer description (optional).
   # * `tags` a comma separated string of tags (optional).
   def create(params={})
-    @client.post("/distributions", nil, params)
+    @client.post("/distributions", nil, params, "Content-Type" => "application/json")
   end
 
   # Retrieve information about an existing device distribution
@@ -51,7 +51,7 @@ class M2X::Distributions
   # * `description` containing a longer description (optional).
   # * `tags` a comma separated string of tags (optional).
   def update(id, params={})
-    @client.put("/distributions/#{URI.encode(id)}", nil, params)
+    @client.put("/distributions/#{URI.encode(id)}", nil, params, "Content-Type" => "application/json")
   end
 
   # List/search all devices in the distribution
@@ -66,7 +66,7 @@ class M2X::Distributions
   # Accepts a `serial` parameter, that must be a unique identifier
   # within this distribution.
   def add_device(id, serial)
-    @client.post("/distributions/#{URI.encode(id)}/devices", nil, { serial: serial })
+    @client.post("/distributions/#{URI.encode(id)}/devices", nil, { serial: serial }, "Content-Type" => "application/json")
   end
 
   # Delete an existing device distribution
