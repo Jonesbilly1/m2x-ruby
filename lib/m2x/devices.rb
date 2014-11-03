@@ -27,9 +27,23 @@ class M2X::Devices
   end
   alias_method :search, :list
 
+  # Create a new device
+  #
+  # Refer to the device documentation for the full list of supported parameters
+  def create(params={})
+    @client.post("/devices", nil, params)
+  end
+
   # Return the details of the supplied device
   def view(id)
     @client.get("/devices/#{URI.encode(id)}")
+  end
+
+  # Update an existing device details
+  #
+  # Refer to the device documentation for the full list of supported parameters
+  def update(id, params={})
+    @client.put("/devices/#{URI.encode(id)}", nil, params)
   end
 
   # Return a list of access log to the supplied device
