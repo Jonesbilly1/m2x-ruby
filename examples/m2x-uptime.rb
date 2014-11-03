@@ -40,7 +40,7 @@ while @run
     load_15m: [ { value: load_15m, timestamp: now } ]
   }
 
-  res = m2x.devices.post_multiple(DEVICE, values)
+  res = m2x.devices.post_updates(DEVICE, values)
 
   abort res.json["message"] unless res.code == 202
 

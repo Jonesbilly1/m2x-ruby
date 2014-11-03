@@ -174,7 +174,7 @@ class M2X::Devices
   #      ],
   #      "stream-name-2": [ ... ]
   #    }
-  def post_multiple(id, values)
+  def post_updates(id, values)
     params = { values: values }
     @client.post("/devices/#{URI.encode(id)}/updates", nil, params, "Content-Type" => "application/json")
   end
