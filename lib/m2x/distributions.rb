@@ -29,7 +29,7 @@ class M2X::Distributions
   #
   # Accepts the following parameters as members of a hash:
   #
-  # * `name` the name of the new data source.
+  # * `name` the name of the new distribution.
   # * `visibility` either "public" or "private".
   # * `description` containing a longer description (optional).
   # * `tags` a comma separated string of tags (optional).
@@ -46,7 +46,7 @@ class M2X::Distributions
   #
   # Accepts the following parameters as members of a hash:
   #
-  # * `name` the name of the new data source.
+  # * `name` the name of the distribution.
   # * `visibility` either "public" or "private".
   # * `description` containing a longer description (optional).
   # * `tags` a comma separated string of tags (optional).
@@ -54,7 +54,7 @@ class M2X::Distributions
     @client.put("/distributions/#{URI.encode(id)}", nil, params)
   end
 
-  # List/search all data sources in the distribution
+  # List/search all devices in the distribution
   #
   # See Devices#search for search parameters description.
   def devices(id, params={})
