@@ -10,9 +10,36 @@ class M2X
 
     USER_AGENT = "M2X/#{::M2X::VERSION} (Ruby Net::HTTP)".freeze
 
+    attr_reader :api_base
+    attr_reader :api_key
+
     def initialize(api_key=nil, api_base=nil)
       @api_base = api_base
       @api_key  = api_key
+    end
+
+    def status
+      get("/status")
+    end
+
+    def keys
+      @keys ||= Keys.new(self)
+    end
+
+    def feeds
+      @feeds ||= Feeds.new(self)
+    end
+
+    def blueprints
+      @blueprints ||= Blueprints.new(self)
+    end
+
+    def datasources
+      @datasources ||= Datasources.new(self)
+    end
+
+    def batches
+      @batches ||= Batches.new(self)
     end
 
     def request(verb, path, qs=nil, params=nil, headers=nil)
