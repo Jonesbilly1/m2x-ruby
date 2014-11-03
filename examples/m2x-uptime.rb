@@ -9,9 +9,9 @@ require "time"
 require "m2x"
 
 API_KEY = "<YOUR-DEVICE-API-KEY>"
-DEVICE    = "<YOUR-DEVICE-ID>"
+DEVICE  = "<YOUR-DEVICE-ID>"
 
-m2x = M2X.new(API_KEY)
+m2x = M2X::Client.new(API_KEY)
 
 @run = true
 trap(:INT) { @run = false }
@@ -35,9 +35,9 @@ while @run
   now = Time.now.iso8601
 
   values = {
-    load_1m:  [ { value: load_1m, at: now } ],
-    load_5m:  [ { value: load_5m, at: now } ],
-    load_15m: [ { value: load_15m, at: now } ]
+    load_1m:  [ { value: load_1m,  timestamp: now } ],
+    load_5m:  [ { value: load_5m,  timestamp: now } ],
+    load_15m: [ { value: load_15m, timestamp: now } ]
   }
 
   res = m2x.devices.post_multiple(DEVICE, values)
