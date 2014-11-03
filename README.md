@@ -28,9 +28,9 @@ m2x = M2X.new(<YOUR-API-KEY>)
 
 This provides an interface to your data on M2X
 
-- [Batches](lib/m2x/batches.rb)
+- [Distributions](lib/m2x/distributions.rb)
   ```ruby
-  batches_api = m2x.batches
+  distributions_api = m2x.distributions
   ```
 
 - [Devices](lib/m2x/devices.rb)

@@ -1,16 +1,16 @@
-# Wrapper for AT&T M2X Batches API
+# Wrapper for AT&T M2X Distributions API
 #
 # See https://m2x.att.com/developer/documentation/device
-class M2X::Batches
-  # Creates a new M2X Batches API Wrapper
+class M2X::Distributions
+  # Creates a new M2X Distributions API Wrapper
   def initialize(client)
     @client = client
   end
 
-  # List/search all the device batches that belong to the user
+  # List/search all the device distributions that belong to the user
   # associated with the M2X API key supplied when initializing M2X
   #
-  # The list of device batches can be filtered by using one or
+  # The list of device distributions can be filtered by using one or
   # more of the following optional parameters:
   #
   # * `q` text to search, matching the name and description.
@@ -21,11 +21,11 @@ class M2X::Batches
   # * `distance` numeric value in `distance_unit`.
   # * `distance_unit` either `miles`, `mi` or `km`.
   def list(params={})
-    @client.get("/batches", params)
+    @client.get("/distributions", params)
   end
   alias_method :search, :list
 
-  # Create a new device batch
+  # Create a new device distribution
   #
   # Accepts the following parameters as members of a hash:
   #
@@ -34,15 +34,15 @@ class M2X::Batches
   # * `description` containing a longer description (optional).
   # * `tags` a comma separated string of tags (optional).
   def create(params={})
-    @client.post("/batches", nil, params)
+    @client.post("/distributions", nil, params)
   end
 
-  # Retrieve information about an existing device batch
+  # Retrieve information about an existing device distribution
   def view(id)
-    @client.get("/batches/#{URI.encode(id)}")
+    @client.get("/distributions/#{URI.encode(id)}")
   end
 
-  # Update an existing device batch details
+  # Update an existing device distribution details
   #
   # Accepts the following parameters as members of a hash:
   #
@@ -51,26 +51,26 @@ class M2X::Batches
   # * `description` containing a longer description (optional).
   # * `tags` a comma separated string of tags (optional).
   def update(id, params={})
-    @client.put("/batches/#{URI.encode(id)}", nil, params)
+    @client.put("/distributions/#{URI.encode(id)}", nil, params)
   end
 
-  # List/search all data sources in the batch
+  # List/search all data sources in the distribution
   #
   # See Devices#search for search parameters description.
   def devices(id, params={})
-    @client.get("/batches/#{URI.encode(id)}/devices", params)
+    @client.get("/distributions/#{URI.encode(id)}/devices", params)
   end
 
-  # Add a new device to an existing batch
+  # Add a new device to an existing distribution
   #
   # Accepts a `serial` parameter, that must be a unique identifier
-  # within this batch.
+  # within this distribution.
   def add_device(id, serial)
-    @client.post("/batches/#{URI.encode(id)}/devices", nil, { serial: serial })
+    @client.post("/distributions/#{URI.encode(id)}/devices", nil, { serial: serial })
   end
 
-  # Delete an existing device batch
+  # Delete an existing device distribution
   def delete(id)
-    @client.delete("/batches/#{URI.encode(id)}")
+    @client.delete("/distributions/#{URI.encode(id)}")
   end
 end

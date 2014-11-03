@@ -29,8 +29,8 @@ class M2X::Client
     @devices ||= M2X::Devices.new(self)
   end
 
-  def batches
-    @batches ||= M2X::Batches.new(self)
+  def distributions
+    @distributions ||= M2X::Distributions.new(self)
   end
 
   def request(verb, path, qs=nil, params=nil, headers=nil)
