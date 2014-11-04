@@ -13,7 +13,7 @@ class M2X::Client::Device
 
     # Return the details of the supplied device
     def [](id)
-      res = client.get("/devices/#{URI.encode(id)}")
+      res = client.get("#{PATH}/#{URI.encode(id)}")
       if res.success?
         json = res.json
 
@@ -26,7 +26,7 @@ class M2X::Client::Device
     #
     # Refer to the device documentation for the full list of supported parameters
     def list(params={})
-      res = client.get("/devices", params)
+      res = client.get("#{PATH}", params)
 
       res.json["devices"].map{ |atts| new(atts["id"], atts) } if res.success?
     end
@@ -39,7 +39,7 @@ class M2X::Client::Device
     #
     # Refer to the device documentation for the full list of supported parameters
     def catalog(params={})
-      res = client.get("/devices/catalog", params)
+      res = client.get("#{PATH}/catalog", params)
 
       res.json["devices"].map{ |atts| new(atts["id"], atts) } if res.success?
     end
@@ -48,7 +48,7 @@ class M2X::Client::Device
     #
     # Refer to the device documentation for the full list of supported parameters
     def create(params={})
-      client.post("/devices", nil, params, "Content-Type" => "application/json")
+      client.post("#{PATH}", nil, params, "Content-Type" => "application/json")
     end
   end
 
@@ -65,7 +65,7 @@ class M2X::Client::Device
   end
 
   def base_path
-    @base_path ||= "/devices/#{URI.encode(@id)}"
+    @base_path ||= "#{PATH}/#{URI.encode(@id)}"
   end
 
   # Update an existing device details
