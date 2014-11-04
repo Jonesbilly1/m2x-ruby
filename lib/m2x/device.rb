@@ -26,7 +26,9 @@ class M2X::Client::Device
     #
     # Refer to the device documentation for the full list of supported parameters
     def list(params={})
-      client.get("/devices", params)
+      res = client.get("/devices", params)
+
+      res.json["devices"].map{ |atts| new(atts["id"], atts) } if res.success?
     end
     alias_method :search, :list
 
@@ -37,7 +39,9 @@ class M2X::Client::Device
     #
     # Refer to the device documentation for the full list of supported parameters
     def catalog(params={})
-      client.get("/devices/catalog", params)
+      res = client.get("/devices/catalog", params)
+
+      res.json["devices"].map{ |atts| new(atts["id"], atts) } if res.success?
     end
 
     # Create a new device
