@@ -2,39 +2,35 @@ require "net/http"
 require "json"
 require "openssl"
 
-class M2X::Client
+module M2X::Client
   API_BASE = "https://api-m2x.att.com/v2".freeze
 
   CA_FILE = File.expand_path("../cacert.pem", __FILE__)
 
-  USER_AGENT = "M2X/#{::M2X::VERSION} (Ruby #{RUBY_VERSION}; #{RUBY_PLATFORM})".freeze
+  USER_AGENT = "M2X/#{::M2X::Client::VERSION} (Ruby #{RUBY_VERSION}; #{RUBY_PLATFORM})".freeze
 
-  attr_reader :api_base
-  attr_reader :api_key
+  module_function
 
-  def initialize(api_key=nil, api_base=nil)
+  def api_base
+    @api_base ||= API_BASE
+  end
+
+  def api_base=(api_base)
     @api_base = api_base
-    @api_key  = api_key
   end
 
-  def status
-    get("/status")
+  def api_key
+    @api_key
   end
 
-  def keys
-    @keys ||= M2X::Keys.new(self)
+  def api_key=(api_key)
+    @api_key = api_key
   end
 
-  def devices
-    @devices ||= M2X::Devices.new(self)
-  end
-
-  def streams
-    @streams ||= M2X::Streams.new(self)
-  end
-
-  def distributions
-    @distributions ||= M2X::Distributions.new(self)
+  def default_headers
+    { "User-Agent" => USER_AGENT }.tap do |headers|
+      headers["X-M2X-KEY"] = api_key if api_key
+    end
   end
 
   def request(verb, path, qs=nil, params=nil, headers=nil)
@@ -72,6 +68,26 @@ class M2X::Client
     define_method verb do |path, qs=nil, params=nil, headers=nil|
       request(verb, path, qs, params, headers)
     end
+  end
+
+  def status
+    get("/status")
+  end
+
+  def keys
+    @keys ||= M2X::Client::Keys.new(self)
+  end
+
+  def devices
+    @devices ||= M2X::Client::Devices.new(self)
+  end
+
+  def streams
+    @streams ||= M2X::Client::Streams.new(self)
+  end
+
+  def distributions
+    @distributions ||= M2X::Client::Distributions.new(self)
   end
 
   class Response
@@ -114,19 +130,5 @@ class M2X::Client
     def error?
       client_error? || server_error?
     end
-  end
-
-  private
-
-  def api_base
-    @api_base ||= API_BASE
-  end
-
-  def default_headers
-    @headers ||= begin
-                   headers = { "User-Agent" => USER_AGENT }
-                   headers.merge!("X-M2X-KEY" => @api_key) if @api_key
-                   headers
-                 end
   end
 end

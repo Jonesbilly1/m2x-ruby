@@ -2,7 +2,7 @@
 #
 # See https://m2x.att.com/developer/documentation/keys for AT&T M2X
 # HTTP Keys API documentation.
-class M2X::Keys
+class M2X::Client::Keys
   # Creates a new M2X Keys API wrapper
   #
   # See M2X::Client for a description of the client API.

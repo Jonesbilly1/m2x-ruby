@@ -2,7 +2,7 @@
 #
 # See https://m2x.att.com/developer/documentation/device for AT&T M2X
 # HTTP Stream API documentation.
-class M2X::Streams
+class M2X::Client::Streams
   # Creates a new M2X Stream API Wrapper
   def initialize(client)
     @client = client

@@ -1,7 +1,7 @@
 # Wrapper for AT&T M2X Distributions API
 #
 # See https://m2x.att.com/developer/documentation/device
-class M2X::Distributions
+class M2X::Client::Distributions
   # Creates a new M2X Distributions API Wrapper
   def initialize(client)
     @client = client

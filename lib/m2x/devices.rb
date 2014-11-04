@@ -2,7 +2,7 @@
 #
 # See https://m2x.att.com/developer/documentation/device for AT&T M2X
 # HTTP Device API documentation.
-class M2X::Devices
+class M2X::Client::Devices
   # Creates a new M2X Device API Wrapper
   def initialize(client)
     @client = client
@@ -104,6 +104,6 @@ class M2X::Devices
   private
 
   def keys_api
-    @keys_api ||= ::M2X::Keys.new(@client)
+    @keys_api ||= ::M2X::Client::Keys.new(@client)
   end
 end
