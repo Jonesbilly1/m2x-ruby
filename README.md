@@ -28,17 +28,17 @@ m2x = M2X::Client.new(<YOUR-API-KEY>)
 
 This provides an interface to your data on M2X
 
-- [Distributions](lib/m2x/distributions.rb)
+- [Distribution](lib/m2x/distribution.rb)
   ```ruby
   distributions_api = m2x.distributions
   ```
 
-- [Devices](lib/m2x/devices.rb)
+- [Device](lib/m2x/device.rb)
   ```ruby
   devices_api = m2x.devices
   ```
 
-- [Keys](lib/m2x/keys.rb)
+- [Key](lib/m2x/key.rb)
   ```ruby
   keys_api = m2x.keys
   ```

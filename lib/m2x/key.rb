@@ -1,16 +1,16 @@
 # Wrapper for AT&T M2X Keys API
 #
 # See https://m2x.att.com/developer/documentation/keys for AT&T M2X
-# HTTP Keys API documentation.
-class M2X::Client::Keys
-  # Creates a new M2X Keys API wrapper
+# HTTP Key API documentation.
+class M2X::Client::Key
+  # Creates a new M2X Key API wrapper
   #
   # See M2X::Client for a description of the client API.
   def initialize(client)
     @client = client
   end
 
-  # List all the Master API Keys that belongs to the user associated
+  # List all the Master API Key that belongs to the user associated
   # with the AT&T M2X API key supplied when initializing M2X
   def list
     @client.get("/keys")

@@ -83,15 +83,15 @@ module M2X::Client
   end
 
   def keys
-    @keys ||= M2X::Client::Keys.new(self)
+    @keys ||= M2X::Client::Key.new(self)
   end
 
   def streams
-    @streams ||= M2X::Client::Streams.new(self)
+    @streams ||= M2X::Client::Stream.new(self)
   end
 
   def distributions
-    @distributions ||= M2X::Client::Distributions.new(self)
+    @distributions ||= M2X::Client::Distribution.new(self)
   end
 
   class Response

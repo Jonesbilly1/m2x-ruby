@@ -1,8 +1,8 @@
 # Wrapper for AT&T M2X Distributions API
 #
 # See https://m2x.att.com/developer/documentation/device
-class M2X::Client::Distributions
-  # Creates a new M2X Distributions API Wrapper
+class M2X::Client::Distribution
+  # Creates a new M2X Distribution API Wrapper
   def initialize(client)
     @client = client
   end
@@ -56,7 +56,7 @@ class M2X::Client::Distributions
 
   # List/search all devices in the distribution
   #
-  # See Devices#search for search parameters description.
+  # See Device#search for search parameters description.
   def devices(id, params={})
     @client.get("/distributions/#{URI.encode(id)}/devices", params)
   end

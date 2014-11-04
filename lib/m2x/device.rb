@@ -133,6 +133,6 @@ class M2X::Client::Device
   private
 
   def keys_api
-    @keys_api ||= ::M2X::Client::Keys.new(client)
+    @keys_api ||= ::M2X::Client::Key.new(client)
   end
 end
