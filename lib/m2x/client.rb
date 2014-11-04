@@ -74,12 +74,16 @@ module M2X::Client
     get("/status")
   end
 
-  def keys
-    @keys ||= M2X::Client::Keys.new(self)
+  def device
+    M2X::Client::Device
   end
 
   def devices
-    @devices ||= M2X::Client::Devices.new(self)
+    M2X::Client::Device.list
+  end
+
+  def keys
+    @keys ||= M2X::Client::Keys.new(self)
   end
 
   def streams
