@@ -20,10 +20,10 @@ $ gem install m2x
 
 ## Usage
 
-In order to communicate with the M2X API, you need an instance of [M2X](lib/m2x.rb). You need to pass your API key in the constructor to access your data.
+In order to communicate with the M2X API, you need an instance of [M2X::Client](lib/m2x/client.rb). You need to pass your API key in the constructor to access your data.
 
 ```ruby
-m2x = M2X.new(<YOUR-API-KEY>)
+m2x = M2X::Client.new(<YOUR-API-KEY>)
 ```
 
 This provides an interface to your data on M2X
