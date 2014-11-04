@@ -1,76 +1,84 @@
 # Wrapper for AT&T M2X Distributions API
 #
-# See https://m2x.att.com/developer/documentation/device
+# See https://m2x.att.com/developer/documentation/distributions
 class M2X::Client::Distribution
-  # Creates a new M2X Distribution API Wrapper
-  def initialize(client)
-    @client = client
+
+  PATH = "/distributions"
+
+  class << self
+    def client
+      @client ||= M2X::Client
+    end
+
+    # Return the details of the supplied distribution
+    def [](id)
+      res = client.get("#{PATH}/#{URI.encode(id)}")
+      if res.success?
+        json = res.json
+
+        new(json["id"], json)
+      end
+    end
+
+    # List/search all the distributions that belong to the user associated
+    # with the M2X API key supplied when initializing M2X
+    #
+    # Refer to the distribution documentation for the full list of supported parameters
+    def list(params={})
+      res = client.get("#{PATH}", params)
+
+      res.json["distributions"].map{ |atts| new(atts["id"], atts) } if res.success?
+    end
+    alias_method :search, :list
+
+    # Create a new distribution
+    #
+    # Refer to the distribution documentation for the full list of supported parameters
+    def create(params={})
+      client.post("#{PATH}", nil, params, "Content-Type" => "application/json")
+    end
   end
 
-  # List/search all the device distributions that belong to the user
-  # associated with the M2X API key supplied when initializing M2X
-  #
-  # The list of device distributions can be filtered by using one or
-  # more of the following optional parameters:
-  #
-  # * `q` text to search, matching the name and description.
-  # * `tags` a comma separated list of tags.
-  # * `limit` how many results per page.
-  # * `page` the specific results page, starting by 1.
-  # * `latitude` and `longitude` for searching devices geographically.
-  # * `distance` numeric value in `distance_unit`.
-  # * `distance_unit` either `miles`, `mi` or `km`.
-  def list(params={})
-    @client.get("/distributions", params)
-  end
-  alias_method :search, :list
-
-  # Create a new device distribution
-  #
-  # Accepts the following parameters as members of a hash:
-  #
-  # * `name` the name of the new distribution.
-  # * `visibility` either "public" or "private".
-  # * `description` containing a longer description (optional).
-  # * `tags` a comma separated string of tags (optional).
-  def create(params={})
-    @client.post("/distributions", nil, params, "Content-Type" => "application/json")
+  def client
+    self.class.client
   end
 
-  # Retrieve information about an existing device distribution
-  def view(id)
-    @client.get("/distributions/#{URI.encode(id)}")
+  attr_accessor :id
+  attr_accessor :attributes
+
+  def initialize(id, attributes)
+    @id = id
+    @attributes = attributes
+  end
+
+  def base_path
+    @base_path ||= "#{PATH}/#{URI.encode(@id)}"
   end
 
   # Update an existing device distribution details
-  #
-  # Accepts the following parameters as members of a hash:
-  #
-  # * `name` the name of the distribution.
-  # * `visibility` either "public" or "private".
-  # * `description` containing a longer description (optional).
-  # * `tags` a comma separated string of tags (optional).
-  def update(id, params={})
-    @client.put("/distributions/#{URI.encode(id)}", nil, params, "Content-Type" => "application/json")
+  def update(params={})
+    client.put("#{base_path}", nil, params, "Content-Type" => "application/json")
   end
 
   # List/search all devices in the distribution
   #
   # See Device#search for search parameters description.
-  def devices(id, params={})
-    @client.get("/distributions/#{URI.encode(id)}/devices", params)
+  def devices(params={})
+    res = client.get("#{base_path}/devices", params)
+
+    res.json["devices"].map{ |atts| ::M2X::Client::Device.new(atts["id"], atts) } if res.success?
   end
 
   # Add a new device to an existing distribution
   #
   # Accepts a `serial` parameter, that must be a unique identifier
   # within this distribution.
-  def add_device(id, serial)
-    @client.post("/distributions/#{URI.encode(id)}/devices", nil, { serial: serial }, "Content-Type" => "application/json")
+  def add_device(serial)
+    client.post("#{base_path}/devices", nil, { serial: serial }, "Content-Type" => "application/json")
   end
 
   # Delete an existing device distribution
-  def delete(id)
-    @client.delete("/distributions/#{URI.encode(id)}")
+  def delete
+    client.delete("#{base_path}")
   end
 end
