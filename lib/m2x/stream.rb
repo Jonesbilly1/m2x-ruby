@@ -3,105 +3,136 @@
 # See https://m2x.att.com/developer/documentation/device for AT&T M2X
 # HTTP Stream API documentation.
 class M2X::Client::Stream
-  # Creates a new M2X Stream API Wrapper
-  def initialize(client)
-    @client = client
+
+  class << self
+    def client
+      @client ||= M2X::Client
+    end
+
+    def path(device_id, name=nil)
+      base = "#{::M2X::Client::Device::PATH}/#{URI.encode(device_id)}/streams"
+      base << "/#{URI.encode(name)}" if name
+      base
+    end
+
+    # Return the details of the supplied stream
+    def fetch(device_id, name)
+      res = client.get("#{path(device_id, name)}")
+      if res.success?
+        json = res.json
+
+        new(device_id, json["name"], json)
+      end
+    end
+
+    # List all the streams that belong to the specified device
+    def list(device_id)
+      res = client.get("#{path(device_id)}")
+
+      res.json["streams"].map{ |atts| new(device_id, atts["name"], atts) } if res.success?
+    end
+
+    # Update a Stream
+    #
+    # If the stream doesn't exist it will be created. In that case, a new instance of Stream will be returned
+    # See https://m2x.att.com/developer/documentation/device#Create-Update-Data-Stream
+    def update(device_id, name, params={})
+      res = client.put("#{path(device_id, name)}", nil, params, "Content-Type" => "application/json")
+
+      return res unless res.status == 201
+
+      json = res.json
+
+      new(device_id, json["name"], json)
+    end
   end
 
-  # Return a list of the associated streams for the supplied device
-  def list(device_id)
-    @client.get("/devices/#{URI.encode(device_id)}/streams")
+  def client
+    self.class.client
   end
 
-  # Return the details of the supplied stream
-  def view(device_id, name)
-    @client.get("/devices/#{URI.encode(device_id)}/streams/#{URI.encode(name)}")
+  attr_accessor :device_id
+  attr_accessor :name
+  attr_accessor :attributes
+
+  def initialize(device_id, name, attributes)
+    @device_id  = device_id
+    @name       = name
+    @attributes = attributes
+  end
+
+  def base_path
+    @base_path ||= self.class.path(@device_id, @name)
   end
 
   # Update stream's properties
-  #
-  # If the stream doesn't exist it will create it. See
-  # https://m2x.att.com/developer/documentation/device#Create-Update-Data-Stream
-  # for details.
-  def update(device_id, name, params={})
-    @client.put("/devices/#{URI.encode(device_id)}/streams/#{URI.encode(name)}", {}, params, "Content-Type" => "application/json")
-  end
-  alias_method :create, :update
-
-  # Delete the stream (and all its values) from the device
-  def delete_stream(device_id, name)
-    @client.delete("/devices/#{URI.encode(device_id)}/streams/#{URI.encode(name)}")
+  def update(params={})
+    client.put(base_path, {}, params, "Content-Type" => "application/json")
   end
 
-  # List values from an existing data stream associated with a
-  # specific device, sorted in reverse chronological order (most
-  # recent values first).
-  #
-  # The values can be filtered by using one or more of the following
-  # optional parameters:
-  #
-  # * `start` An ISO 8601 timestamp specifying the start of the date
-  # * range to be considered.
-  #
-  # * `end` An ISO 8601 timestamp specifying the end of the date
-  # * range to be considered.
-  #
-  # * `limit` Maximum number of values to return.
-  def values(device_id, name, params={})
-    @client.get("/devices/#{URI.encode(device_id)}/streams/#{URI.encode(name)}/values", params)
+  # Delete the stream (and all its values)
+  def delete
+    client.delete(base_path)
   end
 
-  # Sample values from an existing data stream associated with a specific
-  # device, sorted in reverse chronological order (most recent values first).
+  # List values from the stream, sorted in reverse chronological order
+  # (most recent values first).
+  #
+  # Refer to the Stream documentation for a list of allowed parameters
+  def values(params={})
+    client.get("#{base_path}/values", params)
+  end
+
+  # Sample values from the stream, sorted in reverse chronological order
+  # (most recent values first).
   #
   # This method only works for numeric streams
   #
-  # Refer to the sampling endpoint documentation for allowed parameters
-  def sampling(device_id, name, params={})
-    @client.get("/devices/#{URI.encode(device_id)}/streams/#{URI.encode(name)}/sampling", params)
+  # Refer to the Stream documentation for a list of allowed parameters
+  def sampling(params={})
+    client.get("#{base_path}/sampling", params)
   end
 
   # Return count, min, max, average and standard deviation stats for the
-  # values on an existing data stream.
+  # values of the stream.
   #
   # This method only works for numeric streams
   #
-  # Refer to the stats endpoint documentation for allowed parameters
-  def stats(device_id, name, params={})
-    @client.get("/devices/#{URI.encode(device_id)}/streams/#{URI.encode(name)}/stats", params)
+  # Refer to the Stream documentation for a list of allowed parameters
+  def stats(params={})
+    client.get("#{base_path}/stats", params)
   end
 
-  # Update the current value of the specified stream. The timestamp
+  # Update the current value of the stream. The timestamp
   # is optional. If ommited, the current server time will be used
-  def update_value(device_id, name, value, timestamp=nil)
+  def update_value(value, timestamp=nil)
     params = { value: value }
 
     params[:at] = timestamp if timestamp
 
-    @client.put("/devices/#{URI.encode(device_id)}/streams/#{URI.encode(name)}/value", nil, params, "Content-Type" => "application/json")
+    client.put("#{base_path}/value", nil, params, "Content-Type" => "application/json")
   end
 
-  # Post multiple values to a single stream
+  # Post multiple values to the stream
   #
-  # This method allows posting multiple values to a stream
-  # belonging to a device. The stream should be created before
-  # posting values using this method. The `values` parameter is a
-  # hash with the following format:
+  # The `values` parameter is an array with the following format:
   #
-  #     {
+  #     [
   #       { "at": <Time in ISO8601>, "value": x },
   #       { "at": <Time in ISO8601>, "value": y },
   #       [ ... ]
-  #     }
-  def post_values(device_id, name, values)
+  #     ]
+  def post_values(values)
     params = { values: values }
-    @client.post("/devices/#{URI.encode(device_id)}/streams/#{URI.encode(name)}/values", nil, params, "Content-Type" => "application/json")
+
+    client.post("#{base_path}/values", nil, params, "Content-Type" => "application/json")
   end
 
   # Delete values in a stream by a date range
   # The `start` and `stop` parameters should be ISO8601 timestamps
-  def delete_values(device_id, name, start, stop)
+  def delete_values(start, stop)
     params = { from: start, end: stop }
-    @client.delete("/devices/#{URI.encode(device_id)}/streams/#{URI.encode(name)}/values", nil, params, "Content-Type" => "application/json")
+
+    client.delete("#{base_path}/values", nil, params, "Content-Type" => "application/json")
   end
 end
