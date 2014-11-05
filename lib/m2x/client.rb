@@ -98,10 +98,6 @@ module M2X::Client
     key.list
   end
 
-  def streams
-    @streams ||= M2X::Client::Stream.new(self)
-  end
-
   class Response
     attr_reader :response
 
