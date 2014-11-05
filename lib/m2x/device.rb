@@ -98,22 +98,15 @@ class M2X::Client::Device
     client.put("#{base_path}/location", nil, params, "Content-Type" => "application/json")
   end
 
-  # Post multiple values to multiple streams
+  # Post stream updates
   #
   # This method allows posting multiple values to multiple streams
-  # belonging to a device. All the streams should be created before
-  # posting values using this method. The `values` parameters is a
-  # hash with the following format:
+  # belonging to a device and optionally, the device location.
   #
-  #    {
-  #      "stream-name-1": [
-  #        { "at": <Time in ISO8601>, "value": x },
-  #        { "at": <Time in ISO8601>, "value": y }
-  #      ],
-  #      "stream-name-2": [ ... ]
-  #    }
-  def post_updates(values)
-    params = { values: values }
+  # All the streams should be created before posting values using this method.
+  #
+  # Refer to the Device documentation for details
+  def post_updates(params)
     client.post("#{base_path}/updates", nil, params, "Content-Type" => "application/json")
   end
 
