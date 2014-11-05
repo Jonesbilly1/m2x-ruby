@@ -82,6 +82,14 @@ module M2X::Client
     M2X::Client::Device.list
   end
 
+  def distribution
+    M2X::Client::Distribution
+  end
+
+  def distributions
+    distribution.list
+  end
+
   def key
     M2X::Client::Key
   end
@@ -92,10 +100,6 @@ module M2X::Client
 
   def streams
     @streams ||= M2X::Client::Stream.new(self)
-  end
-
-  def distributions
-    @distributions ||= M2X::Client::Distribution.new(self)
   end
 
   class Response
