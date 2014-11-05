@@ -107,6 +107,8 @@ module M2X::Client
 
     def initialize(response)
       @response = response
+
+      STDERR.puts "Response error #{response.code}: #{response.body}" if (400..599).include?(response.code.to_i)
     end
 
     def raw
