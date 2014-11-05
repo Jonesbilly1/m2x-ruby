@@ -36,7 +36,12 @@ class M2X::Client::Key
     # https://m2x.att.com/developer/documentation/keys#Create-Key for
     # details on the parameters accepted by this method.
     def create(params={})
-      client.post("#{PATH}", nil, params, "Content-Type" => "application/json")
+      res = client.post("#{PATH}", nil, params, "Content-Type" => "application/json")
+      if res.success?
+        json = res.json
+
+        new(json["key"], json)
+      end
     end
   end
 
