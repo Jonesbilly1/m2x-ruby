@@ -82,8 +82,12 @@ module M2X::Client
     M2X::Client::Device.list
   end
 
+  def key
+    M2X::Client::Key
+  end
+
   def keys
-    @keys ||= M2X::Client::Key.new(self)
+    key.list
   end
 
   def streams
