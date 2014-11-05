@@ -79,7 +79,7 @@ module M2X::Client
   end
 
   def devices
-    M2X::Client::Device.list
+    device.list
   end
 
   def distribution
