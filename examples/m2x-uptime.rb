@@ -8,10 +8,9 @@
 require "time"
 require "m2x"
 
-API_KEY = "<YOUR-DEVICE-API-KEY>"
-DEVICE  = "<YOUR-DEVICE-ID>"
+M2X::Client.api_key  = "<YOUR-DEVICE-API-KEY>"
 
-m2x = M2X::Client.new(API_KEY)
+DEVICE  = "<YOUR-DEVICE-ID>"
 
 puts "M2X::Client/#{M2X::Client::VERSION} example"
 
@@ -24,6 +23,8 @@ UPTIME_RE = /(\d+\.\d+),? (\d+\.\d+),? (\d+\.\d+)$/
 def load_avg
   `uptime`.match(UPTIME_RE).captures
 end
+
+m2x = M2X::Client
 
 # Get the device
 device = m2x.device[DEVICE]

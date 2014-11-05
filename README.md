@@ -60,10 +60,11 @@ In order to run this example, you will need a `Device ID` and `API Key`. If you 
 require "time"
 require "m2x"
 
-API_KEY = "<YOUR-DEVICE-API-KEY>"
+M2X::Client.api_key  = "<YOUR-DEVICE-API-KEY>"
+
 DEVICE  = "<YOUR-DEVICE-ID>"
 
-m2x = M2X::Client.new(API_KEY)
+puts "M2X::Client/#{M2X::Client::VERSION} example"
 
 @run = true
 trap(:INT) { @run = false }
@@ -75,10 +76,15 @@ def load_avg
   `uptime`.match(UPTIME_RE).captures
 end
 
+m2x = M2X::Client
+
+# Get the device
+device = m2x.device[DEVICE]
+
 # Create the streams if they don't exist
-m2x.streams.update(DEVICE, "load_1m")
-m2x.streams.update(DEVICE, "load_5m")
-m2x.streams.update(DEVICE, "load_15m")
+device.create_stream("load_1m")
+device.create_stream("load_5m")
+device.create_stream("load_15m")
 
 while @run
   load_1m, load_5m, load_15m = load_avg
@@ -92,7 +98,7 @@ while @run
     load_15m: [ { value: load_15m, timestamp: now } ]
   }
 
-  res = m2x.devices.post_updates(DEVICE, values)
+  res = device.post_updates(values: values)
 
   abort res.json["message"] unless res.success?
 
@@ -100,6 +106,7 @@ while @run
 end
 
 puts
+
 
 ```
 
