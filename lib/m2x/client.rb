@@ -1,6 +1,7 @@
 require "net/http"
 require "json"
 require "openssl"
+require "forwardable"
 
 class M2X::Client
   API_BASE = "https://api-m2x.att.com/v2".freeze
@@ -59,12 +60,20 @@ class M2X::Client
     get("/status")
   end
 
-  def device
-    M2X::Client::Device
+  def device(id)
+    M2X::Client::Device.new(self, "id" => id)
   end
 
-  def devices
-    device.list
+  def create_device(params)
+    M2X::Client::Device.create(self, params)
+  end
+
+  def devices(params={})
+    M2X::Client::Device.list(self, params)
+  end
+
+  def device_catalig(params={})
+    M2X::Client::Device.catalog(self, params)
   end
 
   def distribution
