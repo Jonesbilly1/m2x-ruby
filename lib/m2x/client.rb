@@ -72,7 +72,7 @@ class M2X::Client
     M2X::Client::Device.list(self, params)
   end
 
-  def device_catalig(params={})
+  def device_catalog(params={})
     M2X::Client::Device.catalog(self, params)
   end
 
