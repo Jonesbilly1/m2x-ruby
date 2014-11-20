@@ -1,7 +1,6 @@
 # Wrapper for AT&T M2X Devices API
 #
 # See https://m2x.att.com/developer/documentation/device for AT&T M2X
-# HTTP Device API documentation.
 class M2X::Client::Device
   extend Forwardable
 
