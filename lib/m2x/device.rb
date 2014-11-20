@@ -62,7 +62,7 @@ class M2X::Client::Device
   # Update an existing device details
   #
   # Refer to the device documentation for the full list of supported parameters
-  def update(params={})
+  def update(params)
     @client.put(path, nil, params, "Content-Type" => "application/json")
   end
 
