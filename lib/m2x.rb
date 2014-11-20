@@ -1,7 +1,4 @@
-module M2X
-  module Client
-  end
-end
+module M2X; end
 
 require_relative "m2x/version"
 require_relative "m2x/client"

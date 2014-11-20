@@ -2,35 +2,19 @@ require "net/http"
 require "json"
 require "openssl"
 
-module M2X::Client
+class M2X::Client
   API_BASE = "https://api-m2x.att.com/v2".freeze
 
   CA_FILE = File.expand_path("../cacert.pem", __FILE__)
 
   USER_AGENT = "M2X/#{::M2X::Client::VERSION} (Ruby #{RUBY_VERSION}; #{RUBY_PLATFORM})".freeze
 
-  module_function
+  attr_accessor :api_key
+  attr_accessor :api_base
 
-  def api_base
-    @api_base ||= API_BASE
-  end
-
-  def api_base=(api_base)
+  def initialize(api_key=nil, api_base=nil)
     @api_base = api_base
-  end
-
-  def api_key
-    @api_key
-  end
-
-  def api_key=(api_key)
-    @api_key = api_key
-  end
-
-  def default_headers
-    { "User-Agent" => USER_AGENT }.tap do |headers|
-      headers["X-M2X-KEY"] = api_key if api_key
-    end
+    @api_key  = api_key
   end
 
   def request(verb, path, qs=nil, params=nil, headers=nil)
@@ -96,6 +80,17 @@ module M2X::Client
 
   def keys
     key.list
+  end
+
+  private
+  def api_base
+    @api_base ||= API_BASE
+  end
+
+  def default_headers
+    @headers ||= { "User-Agent" => USER_AGENT }.tap do |headers|
+                   headers["X-M2X-KEY"] = @api_key if @api_key
+                 end
   end
 
   class Response
