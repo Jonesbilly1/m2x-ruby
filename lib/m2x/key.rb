@@ -1,32 +1,18 @@
 # Wrapper for AT&T M2X Keys API
 #
 # See https://m2x.att.com/developer/documentation/keys for AT&T M2X
-# HTTP Key API documentation.
 class M2X::Client::Key
+  extend Forwardable
 
   PATH = "/keys"
 
   class << self
-    def client
-      @client ||= M2X::Client
-    end
-
-    # Return the details of the supplied key
-    def [](key)
-      res = client.get("#{PATH}/#{URI.encode(key.to_s)}")
-      if res.success?
-        json = res.json
-
-        new(json["key"], json)
-      end
-    end
-
     # List all the Master API Key that belongs to the user associated
     # with the AT&T M2X API key supplied when initializing M2X
-    def list
-      res = client.get("#{PATH}")
+    def list(client)
+      res = client.get(PATH)
 
-      res.json["keys"].map{ |atts| new(atts["key"], atts) } if res.success?
+      res.json["keys"].map{ |atts| new(client, atts) } if res.success?
     end
 
     # Create a new API Key
@@ -35,30 +21,31 @@ class M2X::Client::Key
     # Master API Key or a Device/Stream API Key. See
     # https://m2x.att.com/developer/documentation/keys#Create-Key for
     # details on the parameters accepted by this method.
-    def create(params={})
-      res = client.post("#{PATH}", nil, params, "Content-Type" => "application/json")
-      if res.success?
-        json = res.json
+    def create(client, params={})
+      res = client.post(PATH, nil, params, "Content-Type" => "application/json")
 
-        new(json["key"], json)
-      end
+      new(client, res.json) if res.success?
     end
   end
 
-  def client
-    self.class.client
-  end
+  attr_reader :attributes
 
-  attr_accessor :key
-  attr_accessor :attributes
+  def_delegator :@attributes, :[]
 
-  def initialize(key, attributes)
-    @key = key
+  def initialize(client, attributes)
+    @client     = client
     @attributes = attributes
   end
 
-  def base_path
-    @base_path ||= "#{PATH}/#{URI.encode(@key.to_s)}"
+  def path
+    @path ||= "#{ PATH }/#{ URI.encode(@attributes.fetch("key")) }"
+  end
+
+  # Return the details of the key
+  def view
+    res = @client.get(path)
+
+    @attributes = res.json if res.success?
   end
 
   # Update API Key properties
@@ -67,7 +54,7 @@ class M2X::Client::Key
   # has the same validations. Note that the Key token cannot be
   # updated through this method.
   def update(params)
-    client.put("#{base_path}", nil, params, "Content-Type" => "application/json")
+    @client.put(path, nil, params, "Content-Type" => "application/json")
   end
 
   # Regenerate an API Key token
@@ -76,18 +63,16 @@ class M2X::Client::Key
   # authentication then you would need to change your scripts to
   # start using the new key token for all subsequent requests.
   def regenerate
-    res = client.post("#{base_path}/regenerate", nil, {})
+    res = @client.post("#{path}/regenerate", nil, {})
 
     if res.success?
-      @base_path = nil
-      @key       = res.json["key"]
-
-      @attributes["key"] = @key
+      @path = nil
+      @attributes = res.json
     end
   end
 
   # Delete the supplied API Key
   def delete
-    client.delete(base_path)
+    @client.delete(path)
   end
 end
