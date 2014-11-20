@@ -1,78 +1,57 @@
 # Wrapper for AT&T M2X Data Streams API
 #
 # See https://m2x.att.com/developer/documentation/device for AT&T M2X
-# HTTP Stream API documentation.
 class M2X::Client::Stream
+  extend Forwardable
 
   class << self
-    def client
-      @client ||= M2X::Client
-    end
-
-    def path(device_id, name=nil)
-      base = "#{::M2X::Client::Device::PATH}/#{URI.encode(device_id)}/streams"
-      base << "/#{URI.encode(name)}" if name
-      base
-    end
-
     # Return the details of the supplied stream
-    def fetch(device_id, name)
-      res = client.get("#{path(device_id, name)}")
-      if res.success?
-        json = res.json
+    def fetch(client, device, name)
+      res = client.get("#{device.path}/streams/#{name}")
 
-        new(device_id, json["name"], json)
-      end
+      new(client, device, res.json) if res.success?
     end
 
     # List all the streams that belong to the specified device
-    def list(device_id)
-      res = client.get("#{path(device_id)}")
+    def list(client, device)
+      res = client.get("#{device.path}/streams")
 
-      res.json["streams"].map{ |atts| new(device_id, atts["name"], atts) } if res.success?
-    end
-
-    # Update a Stream
-    #
-    # If the stream doesn't exist it will be created. In that case, a new instance of Stream will be returned
-    # See https://m2x.att.com/developer/documentation/device#Create-Update-Data-Stream
-    def update(device_id, name, params={})
-      res = client.put("#{path(device_id, name)}", nil, params, "Content-Type" => "application/json")
-
-      return res unless res.status == 201
-
-      json = res.json
-
-      new(device_id, json["name"], json)
+      res.json["streams"].map{ |atts| new(client, device, atts) } if res.success?
     end
   end
 
-  def client
-    self.class.client
-  end
+  attr_reader :attributes
 
-  attr_accessor :device_id
-  attr_accessor :name
-  attr_accessor :attributes
+  def_delegator :@attributes, :[]
 
-  def initialize(device_id, name, attributes)
-    @device_id  = device_id
-    @name       = name
+  def initialize(client, device, attributes)
+    @client     = client
+    @device     = device
     @attributes = attributes
   end
 
-  def base_path
-    @base_path ||= self.class.path(@device_id, @name)
+  def path
+    @path ||= "#{@device.path}/streams/#{ URI.encode(@attributes.fetch("name")) }"
+  end
+
+  # Return the stream details
+  def view
+    res = @client.get(path)
+
+    @attributes = res.json if res.success?
   end
 
   # Update stream's properties
+  # If the stream doesn't exist, it will be created
   def update(params={})
-    client.put(base_path, {}, params, "Content-Type" => "application/json")
+    res = @client.put(path, {}, params, "Content-Type" => "application/json")
+
+    @attributes = res.json if res.status == 201
   end
 
   # Delete the stream (and all its values)
   def delete
-    client.delete(base_path)
+    @client.delete(path)
   end
 
   # List values from the stream, sorted in reverse chronological order
@@ -80,7 +59,7 @@ class M2X::Client::Stream
   #
   # Refer to the Stream documentation for a list of allowed parameters
   def values(params={})
-    client.get("#{base_path}/values", params)
+    @client.get("#{path}/values", params)
   end
 
   # Sample values from the stream, sorted in reverse chronological order
@@ -89,8 +68,8 @@ class M2X::Client::Stream
   # This method only works for numeric streams
   #
   # Refer to the Stream documentation for a list of allowed parameters
-  def sampling(params={})
-    client.get("#{base_path}/sampling", params)
+  def sampling(params)
+    @client.get("#{path}/sampling", params)
   end
 
   # Return count, min, max, average and standard deviation stats for the
@@ -100,7 +79,7 @@ class M2X::Client::Stream
   #
   # Refer to the Stream documentation for a list of allowed parameters
   def stats(params={})
-    client.get("#{base_path}/stats", params)
+    @client.get("#{path}/stats", params)
   end
 
   # Update the current value of the stream. The timestamp
@@ -110,7 +89,7 @@ class M2X::Client::Stream
 
     params[:at] = timestamp if timestamp
 
-    client.put("#{base_path}/value", nil, params, "Content-Type" => "application/json")
+    @client.put("#{path}/value", nil, params, "Content-Type" => "application/json")
   end
 
   # Post multiple values to the stream
@@ -118,14 +97,14 @@ class M2X::Client::Stream
   # The `values` parameter is an array with the following format:
   #
   #     [
-  #       { "at": <Time in ISO8601>, "value": x },
-  #       { "at": <Time in ISO8601>, "value": y },
+  #       { "timestamp": <Time in ISO8601>, "value": x },
+  #       { "timestamp": <Time in ISO8601>, "value": y },
   #       [ ... ]
   #     ]
   def post_values(values)
     params = { values: values }
 
-    client.post("#{base_path}/values", nil, params, "Content-Type" => "application/json")
+    @client.post("#{path}/values", nil, params, "Content-Type" => "application/json")
   end
 
   # Delete values in a stream by a date range
@@ -133,6 +112,6 @@ class M2X::Client::Stream
   def delete_values(start, stop)
     params = { from: start, end: stop }
 
-    client.delete("#{base_path}/values", nil, params, "Content-Type" => "application/json")
+    @client.delete("#{path}/values", nil, params, "Content-Type" => "application/json")
   end
 end

@@ -96,18 +96,20 @@ class M2X::Client::Device
   #   @client.post("#{path}/updates", nil, params, "Content-Type" => "application/json")
   # end
 
-  # def streams
-  #   ::M2X::Client::Stream.list(self["id"])
-  # end
+  def streams
+    ::M2X::Client::Stream.list(@client, self)
+  end
 
-  # def fetch_stream(name)
-  #   ::M2X::Client::Stream.fetch(self["id"], name)
-  # end
+  def fetch_stream(name)
+    ::M2X::Client::Stream.fetch(@client, self, name)
+  end
 
-  # def update_stream(name, params={})
-  #   ::M2X::Client::Stream.update(self["id"], name, params)
-  # end
-  # alias_method :create_stream, :update_stream
+  def update_stream(name, params={})
+    stream = ::M2X::Client::Stream.new(@client, self, "name" => name)
+
+    stream.update(params)
+  end
+  alias_method :create_stream, :update_stream
 
   # # Returns a list of API keys associated with the device
   # def keys(id)
