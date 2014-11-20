@@ -12,7 +12,7 @@ class M2X::Client
 
   attr_accessor :api_key
   attr_accessor :api_base
-  attr_accessor :last_response
+  attr_reader   :last_response
 
   def initialize(api_key=nil, api_base=nil)
     @api_base = api_base
