@@ -76,12 +76,16 @@ class M2X::Client
     M2X::Client::Device.catalog(self, params)
   end
 
-  def distribution
-    M2X::Client::Distribution
+  def distribution(id)
+    M2X::Client::Distribution.new(self, "id" => id)
   end
 
-  def distributions
-    distribution.list
+  def create_distribution(params)
+    M2X::Client::Distribution.create(self, params)
+  end
+
+  def distributions(params={})
+    M2X::Client::Distribution.list(self, params)
   end
 
   def key
