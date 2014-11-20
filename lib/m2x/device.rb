@@ -33,12 +33,9 @@ class M2X::Client::Device
     #
     # Refer to the device documentation for the full list of supported parameters
     def create(client, params)
-      res = client.post("#{PATH}", nil, params, "Content-Type" => "application/json")
-      if res.success?
-        json = res.json
+      res = client.post(PATH, nil, params, "Content-Type" => "application/json")
 
-        new(json["id"], json)
-      end
+      new(client, res.json) if res.success?
     end
   end
 
