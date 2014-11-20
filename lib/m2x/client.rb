@@ -88,12 +88,16 @@ class M2X::Client
     M2X::Client::Distribution.list(self, params)
   end
 
-  def key
-    M2X::Client::Key
+  def key(key)
+    M2X::Client::Key.new(self, "key" => key)
+  end
+
+  def create_key(params)
+    M2X::Client::Key.create(self, params)
   end
 
   def keys
-    key.list
+    M2X::Client::Key.list(self)
   end
 
   private
