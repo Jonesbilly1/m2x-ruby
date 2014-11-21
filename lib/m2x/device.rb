@@ -111,27 +111,16 @@ class M2X::Client::Device
   end
   alias_method :create_stream, :update_stream
 
-  # # Returns a list of API keys associated with the device
-  # def keys(id)
-  #   client.get("/keys", device: self["id"])
-  # end
+  # Returns a list of API keys associated with the device
+  def keys
+    ::M2X::Client::Key.list(@client, params.merge(device: self["id"]))
+  end
 
-  # # Creates a new API key associated to the device
-  # #
-  # # If a parameter named `stream` is supplied with a stream name, it
-  # # will create an API key associated with that stream only.
-  # def create_key(params)
-  #   keys_api.create(params.merge(device: self["id"]))
-  # end
-
-  # # Updates an API key properties
-  # def update_key(key, params)
-  #   keys_api.update(key, params.merge(device: self["id"]))
-  # end
-
-  # private
-
-  # def keys_api
-  #   @keys_api ||= ::M2X::Client::Key.new(@client)
-  # end
+  # Creates a new API key associated to the device
+  #
+  # If a parameter named `stream` is supplied with a stream name, it
+  # will create an API key associated with that stream only.
+  def create_key(params)
+    ::M2X::Client::Key.create(@client, params.merge(device: self["id"]))
+  end
 end
