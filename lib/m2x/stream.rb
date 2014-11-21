@@ -38,7 +38,7 @@ class M2X::Client::Stream < M2X::Client::Resource
 
   # Update stream's properties
   # If the stream doesn't exist, it will be created
-  def update(params={})
+  def update(params)
     res = @client.put(path, {}, params, "Content-Type" => "application/json")
 
     @attributes = res.json if res.status == 201
