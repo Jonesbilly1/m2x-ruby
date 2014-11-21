@@ -7,20 +7,19 @@ KEY     = ENV.fetch("KEY")
 KITCHEN = ENV.fetch("KITCHEN")
 GARAGE  = ENV.fetch("GARAGE")
 
-
 client = M2X::Client.new(KEY)
 
 kitchen   = client.device(KITCHEN)
 garage    = client.device(GARAGE)
-door_open = M2X::Client::Stream.new(client, garage, "name" => "door_open")
 
 # Create the streams if they don't exist
 kitchen.create_stream("humidity")
 kitchen.create_stream("temperature")
 garage.create_stream("humidity")
 garage.create_stream("temperature")
+garage.create_stream("door_open")
 
-door_open.update # Create the stream if it doesn't exist
+door_open = garage.fetch_stream("door_open")
 
 @run = true
 
