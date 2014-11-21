@@ -30,17 +30,23 @@ This provides an interface to your data on M2X
 
 - [Distribution](lib/m2x/distribution.rb)
   ```ruby
-  distributions_api = m2x.distributions
+  distribution = m2x.distribution("<DISTRIBUTION-ID>")
+
+  distributions = m2x.distributions
   ```
 
 - [Device](lib/m2x/device.rb)
   ```ruby
-  devices_api = m2x.devices
+  device = m2x.device("<DEVICE-ID>")
+
+  devices = m2x.devices
   ```
 
 - [Key](lib/m2x/key.rb)
   ```ruby
-  keys_api = m2x.keys
+  key = m2x.key("<KEY-TOKEN>")
+
+  keys = m2x.keys
   ```
 
 Refer to the documentation on each class for further usage instructions.
