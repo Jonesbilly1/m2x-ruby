@@ -26,7 +26,7 @@ class M2X::Client
   end
 
   def device(id)
-    M2X::Client::Device.new(self, "id" => id)
+    M2X::Client::Device.new(self, "id" => id).tap(&:view)
   end
 
   def create_device(params)
@@ -42,7 +42,7 @@ class M2X::Client
   end
 
   def distribution(id)
-    M2X::Client::Distribution.new(self, "id" => id)
+    M2X::Client::Distribution.new(self, "id" => id).tap(&:view)
   end
 
   def create_distribution(params)
@@ -54,7 +54,7 @@ class M2X::Client
   end
 
   def key(key)
-    M2X::Client::Key.new(self, "key" => key)
+    M2X::Client::Key.new(self, "key" => key).tap(&:view)
   end
 
   def create_key(params)
