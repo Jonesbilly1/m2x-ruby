@@ -4,7 +4,8 @@ require "openssl"
 require "forwardable"
 
 class M2X::Client
-  API_BASE = "https://api-m2x.att.com/v2".freeze
+  API_BASE    = "https://api-m2x.att.com".freeze
+  API_VERSION = "v2".freeze
 
   CA_FILE = File.expand_path("../cacert.pem", __FILE__)
 
@@ -12,11 +13,13 @@ class M2X::Client
 
   attr_accessor :api_key
   attr_accessor :api_base
+  attr_accessor :api_version
   attr_reader   :last_response
 
   def initialize(api_key=nil, api_base=nil)
-    @api_base = api_base
-    @api_key  = api_key
+    @api_key     = api_key
+    @api_base    = api_base
+    @api_version = api_version
   end
 
   def status
@@ -64,7 +67,7 @@ class M2X::Client
   end
 
   def request(verb, path, qs=nil, params=nil, headers=nil)
-    url = URI.parse(File.join(api_base, path))
+    url = URI.parse(File.join(api_base, versioned(path)))
 
     url.query = URI.encode_www_form(qs) unless qs.nil? || qs.empty?
 
@@ -103,6 +106,18 @@ class M2X::Client
   private
   def api_base
     @api_base ||= API_BASE
+  end
+
+  def api_version
+    @api_version ||= API_VERSION
+  end
+
+  def versioned(path)
+    versioned?(path) ? path : "/#{api_version}#{path}"
+  end
+
+  def versioned?(path)
+    path =~ /^\/v\d+\//
   end
 
   def default_headers
