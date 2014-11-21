@@ -47,7 +47,13 @@ Refer to the documentation on each class for further usage instructions.
 
 ## Example
 
-In order to run this example, you will need a `Device ID` and `API Key`. If you don't have any, access your M2X account, create a new [Device](https://m2x.att.com/devices), and copy the `Device ID` and `API Key` values. The following script will send your CPU load average to three different streams named `load_1m`, `load_5m` and `load_15`. Check that there's no need to create a stream in order to write values into it:
+In order to run this example, you will need a `Device ID` and `API Key`. If you don't have any, access your M2X account, create a new [Device](https://m2x.att.com/devices), and copy the `Device ID` and `API Key` values. The following script will send your CPU load average to three different streams named `load_1m`, `load_5m` and `load_15`. Check that there's no need to create a stream in order to write values into it.
+
+In order to execute this script run:
+
+```bash
+API_KEY=<YOUR-API-KEY> DEVICE=<YOUR-DEVICE-ID> ./m2x-uptime.rb
+```
 
 ```ruby
 #! /usr/bin/env ruby
@@ -60,14 +66,17 @@ In order to run this example, you will need a `Device ID` and `API Key`. If you 
 require "time"
 require "m2x"
 
-M2X::Client.api_key  = "<YOUR-DEVICE-API-KEY>"
-
-DEVICE  = "<YOUR-DEVICE-ID>"
+API_KEY = ENV.fetch("API_KEY")
+DEVICE  = ENV.fetch("DEVICE")
 
 puts "M2X::Client/#{M2X::Client::VERSION} example"
 
 @run = true
-trap(:INT) { @run = false }
+
+stop = Proc.new { @run = false }
+
+trap(:INT,  &stop)
+trap(:TERM, &stop)
 
 # Match `uptime` load averages output for both Linux and OSX
 UPTIME_RE = /(\d+\.\d+),? (\d+\.\d+),? (\d+\.\d+)$/
@@ -76,10 +85,10 @@ def load_avg
   `uptime`.match(UPTIME_RE).captures
 end
 
-m2x = M2X::Client
+m2x = M2X::Client.new(API_KEY)
 
 # Get the device
-device = m2x.device[DEVICE]
+device = m2x.device(DEVICE)
 
 # Create the streams if they don't exist
 device.create_stream("load_1m")
@@ -106,7 +115,6 @@ while @run
 end
 
 puts
-
 
 ```
 

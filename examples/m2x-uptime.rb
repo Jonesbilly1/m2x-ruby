@@ -8,14 +8,17 @@
 require "time"
 require "m2x"
 
-M2X::Client.api_key  = "<YOUR-DEVICE-API-KEY>"
-
-DEVICE  = "<YOUR-DEVICE-ID>"
+API_KEY = ENV.fetch("API_KEY")
+DEVICE  = ENV.fetch("DEVICE")
 
 puts "M2X::Client/#{M2X::Client::VERSION} example"
 
 @run = true
-trap(:INT) { @run = false }
+
+stop = Proc.new { @run = false }
+
+trap(:INT,  &stop)
+trap(:TERM, &stop)
 
 # Match `uptime` load averages output for both Linux and OSX
 UPTIME_RE = /(\d+\.\d+),? (\d+\.\d+),? (\d+\.\d+)$/
@@ -24,10 +27,10 @@ def load_avg
   `uptime`.match(UPTIME_RE).captures
 end
 
-m2x = M2X::Client
+m2x = M2X::Client.new(API_KEY)
 
 # Get the device
-device = m2x.device[DEVICE]
+device = m2x.device(DEVICE)
 
 # Create the streams if they don't exist
 device.create_stream("load_1m")
