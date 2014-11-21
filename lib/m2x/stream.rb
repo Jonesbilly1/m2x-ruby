@@ -31,7 +31,7 @@ class M2X::Client::Stream < M2X::Client::Resource
 
   # Update stream's properties
   # If the stream doesn't exist, it will be created
-  def update(params)
+  def update!(params)
     res = @client.put(path, {}, params, "Content-Type" => "application/json")
 
     @attributes = res.json if res.status == 201
@@ -92,7 +92,7 @@ class M2X::Client::Stream < M2X::Client::Resource
 
   # Delete values in a stream by a date range
   # The `start` and `stop` parameters should be ISO8601 timestamps
-  def delete_values(start, stop)
+  def delete_values!(start, stop)
     params = { from: start, end: stop }
 
     @client.delete("#{path}/values", nil, params, "Content-Type" => "application/json")

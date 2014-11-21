@@ -20,7 +20,7 @@ class M2X::Client::Key
     # Master API Key or a Device/Stream API Key. See
     # https://m2x.att.com/developer/documentation/keys#Create-Key for
     # details on the parameters accepted by this method.
-    def create(client, params={})
+    def create!(client, params={})
       res = client.post(PATH, nil, params, "Content-Type" => "application/json")
 
       new(client, res.json) if res.success?

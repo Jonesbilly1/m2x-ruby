@@ -21,12 +21,12 @@ class M2X::Client::Resource
   end
 
   # Update an existing resource details
-  def update(params)
+  def update!(params)
     @client.put(path, nil, params, "Content-Type" => "application/json")
   end
 
   # Delete the resource
-  def delete
+  def delete!
     @client.delete(path)
   end
 

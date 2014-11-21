@@ -20,7 +20,7 @@ class M2X::Client::Distribution < M2X::Client::Resource
     # Create a new distribution
     #
     # Refer to the distribution documentation for the full list of supported parameters
-    def create(client, params)
+    def create!(client, params)
       res = client.post(PATH, nil, params, "Content-Type" => "application/json")
 
       new(client, res.json) if res.success?

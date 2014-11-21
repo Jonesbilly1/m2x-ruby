@@ -30,7 +30,7 @@ class M2X::Client
   end
 
   def create_device(params)
-    M2X::Client::Device.create(self, params)
+    M2X::Client::Device.create!(self, params)
   end
 
   def devices(params={})
@@ -46,7 +46,7 @@ class M2X::Client
   end
 
   def create_distribution(params)
-    M2X::Client::Distribution.create(self, params)
+    M2X::Client::Distribution.create!(self, params)
   end
 
   def distributions(params={})
@@ -58,7 +58,7 @@ class M2X::Client
   end
 
   def create_key(params)
-    M2X::Client::Key.create(self, params)
+    M2X::Client::Key.create!(self, params)
   end
 
   def keys

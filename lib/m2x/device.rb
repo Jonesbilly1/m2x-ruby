@@ -37,7 +37,7 @@ class M2X::Client::Device < M2X::Client::Resource
     # Create a new device
     #
     # Refer to the device documentation for the full list of supported parameters
-    def create(client, params)
+    def create!(client, params)
       res = client.post(PATH, nil, params, "Content-Type" => "application/json")
 
       new(client, res.json) if res.success?
@@ -89,7 +89,7 @@ class M2X::Client::Device < M2X::Client::Resource
   def update_stream(name, params={})
     stream = ::M2X::Client::Stream.new(@client, self, "name" => name)
 
-    stream.update(params)
+    stream.update!(params)
   end
   alias_method :create_stream, :update_stream
 
@@ -103,6 +103,6 @@ class M2X::Client::Device < M2X::Client::Resource
   # If a parameter named `stream` is supplied with a stream name, it
   # will create an API key associated with that stream only.
   def create_key(params)
-    ::M2X::Client::Key.create(@client, params.merge(device: self["id"]))
+    ::M2X::Client::Key.create!(@client, params.merge(device: self["id"]))
   end
 end
