@@ -2,7 +2,6 @@
 #
 # See https://m2x.att.com/developer/documentation/keys for AT&T M2X
 class M2X::Client::Key
-  extend Forwardable
 
   PATH = "/keys"
 
@@ -27,10 +26,6 @@ class M2X::Client::Key
       new(client, res.json) if res.success?
     end
   end
-
-  attr_reader :attributes
-
-  def_delegator :@attributes, :[]
 
   def initialize(client, attributes)
     @client     = client

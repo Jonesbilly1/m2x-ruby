@@ -1,8 +1,7 @@
 # Wrapper for AT&T M2X Distributions API
 #
 # See https://m2x.att.com/developer/documentation/distributions
-class M2X::Client::Distribution
-  extend Forwardable
+class M2X::Client::Distribution < M2X::Client::Resource
 
   PATH = "/distributions"
 
@@ -27,10 +26,6 @@ class M2X::Client::Distribution
       new(client, res.json) if res.success?
     end
   end
-
-  attr_reader :attributes
-
-  def_delegator :@attributes, :[]
 
   def initialize(client, attributes)
     @client     = client

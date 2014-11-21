@@ -1,7 +1,6 @@
 require "net/http"
 require "json"
 require "openssl"
-require "forwardable"
 
 class M2X::Client
   API_BASE    = "http://api-m2x.att.com".freeze

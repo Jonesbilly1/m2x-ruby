@@ -1,8 +1,7 @@
 # Wrapper for AT&T M2X Data Streams API
 #
 # See https://m2x.att.com/developer/documentation/device for AT&T M2X
-class M2X::Client::Stream
-  extend Forwardable
+class M2X::Client::Stream < M2X::Client::Resource
 
   class << self
     # Return the details of the supplied stream
@@ -19,10 +18,6 @@ class M2X::Client::Stream
       res.json["streams"].map{ |atts| new(client, device, atts) } if res.success?
     end
   end
-
-  attr_reader :attributes
-
-  def_delegator :@attributes, :[]
 
   def initialize(client, device, attributes)
     @client     = client

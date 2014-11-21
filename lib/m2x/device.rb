@@ -1,8 +1,7 @@
 # Wrapper for AT&T M2X Devices API
 #
 # See https://m2x.att.com/developer/documentation/device for AT&T M2X
-class M2X::Client::Device
-  extend Forwardable
+class M2X::Client::Device < M2X::Client::Resource
 
   PATH = "/devices"
 
@@ -38,10 +37,6 @@ class M2X::Client::Device
       new(client, res.json) if res.success?
     end
   end
-
-  attr_reader :attributes
-
-  def_delegator :@attributes, :[]
 
   def initialize(client, attributes)
     @client     = client
