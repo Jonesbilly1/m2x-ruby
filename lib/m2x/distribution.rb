@@ -27,27 +27,8 @@ class M2X::Client::Distribution < M2X::Client::Resource
     end
   end
 
-  def initialize(client, attributes)
-    @client     = client
-    @attributes = attributes
-  end
-
   def path
     @path ||= "#{ PATH }/#{ URI.encode(@attributes.fetch("id")) }"
-  end
-
-  # Return the details of the distribution
-  def view
-    res = @client.get(path)
-
-    @attributes = res.json if res.success?
-  end
-
-  # Update an existing device distribution details
-  #
-  # Refer to the distribution documentation for the full list of supported parameters
-  def update(params)
-    @client.put(path, nil, params, "Content-Type" => "application/json")
   end
 
   # List/search all devices in the distribution
@@ -65,10 +46,5 @@ class M2X::Client::Distribution < M2X::Client::Resource
     res = @client.post("#{path}/devices", nil, { serial: serial }, "Content-Type" => "application/json")
 
     ::M2X::Client::Device.new(@client, res.json) if res.success?
-  end
-
-  # Delete an existing device distribution
-  def delete
-    @client.delete(path)
   end
 end

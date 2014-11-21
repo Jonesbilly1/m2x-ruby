@@ -29,24 +29,12 @@ class M2X::Client::Stream < M2X::Client::Resource
     @path ||= "#{@device.path}/streams/#{ URI.encode(@attributes.fetch("name")) }"
   end
 
-  # Return the stream details
-  def view
-    res = @client.get(path)
-
-    @attributes = res.json if res.success?
-  end
-
   # Update stream's properties
   # If the stream doesn't exist, it will be created
   def update(params)
     res = @client.put(path, {}, params, "Content-Type" => "application/json")
 
     @attributes = res.json if res.status == 201
-  end
-
-  # Delete the stream (and all its values)
-  def delete
-    @client.delete(path)
   end
 
   # List values from the stream, sorted in reverse chronological order

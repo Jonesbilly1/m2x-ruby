@@ -27,29 +27,8 @@ class M2X::Client::Key
     end
   end
 
-  def initialize(client, attributes)
-    @client     = client
-    @attributes = attributes
-  end
-
   def path
     @path ||= "#{ PATH }/#{ URI.encode(@attributes.fetch("key")) }"
-  end
-
-  # Return the details of the key
-  def view
-    res = @client.get(path)
-
-    @attributes = res.json if res.success?
-  end
-
-  # Update API Key properties
-  #
-  # This method accepts the same parameters as create API Key and
-  # has the same validations. Note that the Key token cannot be
-  # updated through this method.
-  def update(params)
-    @client.put(path, nil, params, "Content-Type" => "application/json")
   end
 
   # Regenerate an API Key token
@@ -64,10 +43,5 @@ class M2X::Client::Key
       @path = nil
       @attributes = res.json
     end
-  end
-
-  # Delete the supplied API Key
-  def delete
-    @client.delete(path)
   end
 end

@@ -38,27 +38,8 @@ class M2X::Client::Device < M2X::Client::Resource
     end
   end
 
-  def initialize(client, attributes)
-    @client     = client
-    @attributes = attributes
-  end
-
   def path
     @path ||= "#{ PATH }/#{ URI.encode(@attributes.fetch("id")) }"
-  end
-
-  # Return the details of the supplied device
-  def view
-    res = @client.get(path)
-
-    @attributes = res.json if res.success?
-  end
-
-  # Update an existing device details
-  #
-  # Refer to the device documentation for the full list of supported parameters
-  def update(params)
-    @client.put(path, nil, params, "Content-Type" => "application/json")
   end
 
   # Return a list of access log to the supplied device
