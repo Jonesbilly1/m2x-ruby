@@ -9,8 +9,8 @@ class M2X::Client::Key
   class << self
     # List all the Master API Key that belongs to the user associated
     # with the AT&T M2X API key supplied when initializing M2X
-    def list(client)
-      res = client.get(PATH)
+    def list(client, params={})
+      res = client.get(PATH, params)
 
       res.json["keys"].map{ |atts| new(client, atts) } if res.success?
     end
