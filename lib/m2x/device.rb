@@ -28,6 +28,12 @@ class M2X::Client::Device < M2X::Client::Resource
       res.json["devices"].map{ |atts| new(client, atts) } if res.success?
     end
 
+    # List Device Groups
+    # Retrieve the list of device groups for the authenticated user.
+    def groups(client)
+      client.get("#{PATH}/groups")
+    end
+
     # Create a new device
     #
     # Refer to the device documentation for the full list of supported parameters
