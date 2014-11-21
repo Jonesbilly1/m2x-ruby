@@ -1,6 +1,5 @@
-# Wrapper for AT&T M2X Devices API
-#
-# See https://m2x.att.com/developer/documentation/device for AT&T M2X
+# Wrapper for AT&T M2X Device API
+# https://m2x.att.com/developer/documentation/v2/device
 class M2X::Client::Device < M2X::Client::Resource
 
   PATH = "/devices"

@@ -1,6 +1,5 @@
 # Wrapper for AT&T M2X Data Streams API
-#
-# See https://m2x.att.com/developer/documentation/device for AT&T M2X
+# https://m2x.att.com/developer/documentation/v2/device
 class M2X::Client::Stream < M2X::Client::Resource
 
   class << self

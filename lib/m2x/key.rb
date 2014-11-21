@@ -1,6 +1,5 @@
 # Wrapper for AT&T M2X Keys API
-#
-# See https://m2x.att.com/developer/documentation/keys for AT&T M2X
+# https://m2x.att.com/developer/documentation/v2/keys
 class M2X::Client::Key
 
   PATH = "/keys"
