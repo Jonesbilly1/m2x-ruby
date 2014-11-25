@@ -115,6 +115,14 @@ class M2X::Client
     M2X::Client::Key.list(self)
   end
 
+  # Define methods for accessing M2X REST API
+  [:get, :post, :put, :delete, :head, :options, :patch].each do |verb|
+    define_method verb do |path, qs=nil, params=nil, headers=nil|
+      request(verb, path, qs, params, headers)
+    end
+  end
+
+  private
   def request(verb, path, qs=nil, params=nil, headers=nil)
     url = URI.parse(File.join(api_base, versioned(path)))
 
@@ -146,14 +154,6 @@ class M2X::Client
     @last_response = Response.new(res)
   end
 
-  # Define methods for accessing M2X REST API
-  [:get, :post, :put, :delete, :head, :options, :patch].each do |verb|
-    define_method verb do |path, qs=nil, params=nil, headers=nil|
-      request(verb, path, qs, params, headers)
-    end
-  end
-
-  private
   def api_base
     @api_base ||= DEFAULT_API_BASE
   end
