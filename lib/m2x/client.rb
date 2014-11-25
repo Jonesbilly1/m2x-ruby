@@ -29,9 +29,10 @@ class M2X::Client
     @api_version = api_version
   end
 
-  # Returns the status of the M2X system. The response to this endpoint is
-  # an object in which each of its attributes represents an M2X subsystem
-  # and its current status.
+  # Returns the status of the M2X system.
+  #
+  # The response to this endpoint is an object in which each of its attributes
+  # represents an M2X subsystem and its current status.
   def status
     get("/status")
   end
@@ -57,10 +58,12 @@ class M2X::Client
     M2X::Client::Device.list(self, params)
   end
 
-  # Search the catalog of public Devices. This allows unauthenticated
-  # users to search Devices from other users that have been marked as
-  # public, allowing them to read public Device metadata, locations,
-  # streams list, and view each Devices' stream metadata and its values.
+  # Search the catalog of public Devices.
+  #
+  # This allows unauthenticated users to search Devices from other users that
+  # have been marked as public, allowing them to read public Device metadata,
+  # locations, streams list, and view each Devices' stream metadata and its
+  # values.
   #
   # See M2X::Client::Device.catalog for more details
   def device_catalog(params={})

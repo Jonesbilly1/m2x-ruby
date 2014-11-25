@@ -15,10 +15,12 @@ class M2X::Client::Device < M2X::Client::Resource
       res.json["devices"].map{ |atts| new(client, atts) } if res.success?
     end
 
-    # Search the catalog of public Devices. This allows unauthenticated
-    # users to search Devices from other users that have been marked as
-    # public, allowing them to read public Device metadata, locations,
-    # streams list, and view each Devices' stream metadata and its values.
+    # Search the catalog of public Devices.
+    #
+    # This allows unauthenticated users to search Devices from other users
+    # that have been marked as public, allowing them to read public Device
+    # metadata, locations, streams list, and view each Devices' stream metadata
+    # and its values.
     #
     # https://m2x.att.com/developer/documentation/v2/device#List-Search-Public-Devices-Catalog
     def catalog(client, params={})
