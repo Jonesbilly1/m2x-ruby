@@ -81,7 +81,7 @@ class M2X::Client::Device < M2X::Client::Resource
     ::M2X::Client::Stream.list(@client, self)
   end
 
-  def fetch_stream(name)
+  def stream(name)
     ::M2X::Client::Stream.fetch(@client, self, name)
   end
 

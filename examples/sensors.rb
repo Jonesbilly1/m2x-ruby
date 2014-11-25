@@ -19,7 +19,7 @@ garage.create_stream("humidity")
 garage.create_stream("temperature")
 garage.create_stream("door_open")
 
-door_open = garage.fetch_stream("door_open")
+door_open = garage.stream("door_open")
 
 @run = true
 
