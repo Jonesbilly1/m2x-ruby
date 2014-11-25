@@ -3,14 +3,18 @@
 class M2X::Client::Stream < M2X::Client::Resource
 
   class << self
-    # Return the details of the supplied stream
+    # Get details of a specific data Stream associated with a device
+    #
+    # https://m2x.att.com/developer/documentation/v2/device#View-Data-Stream
     def fetch(client, device, name)
       res = client.get("#{device.path}/streams/#{name}")
 
       new(client, device, res.json) if res.success?
     end
 
-    # List all the streams that belong to the specified device
+    # Retrieve list of data streams associated with a device.
+    #
+    # https://m2x.att.com/developer/documentation/v2/device#List-Data-Streams
     def list(client, device)
       res = client.get("#{device.path}/streams")
 
@@ -28,8 +32,10 @@ class M2X::Client::Stream < M2X::Client::Resource
     @path ||= "#{@device.path}/streams/#{ URI.encode(@attributes.fetch("name")) }"
   end
 
-  # Update stream's properties
-  # If the stream doesn't exist, it will be created
+  # Update stream properties
+  # (if the stream does not exist it gets created).
+  #
+  # https://m2x.att.com/developer/documentation/v2/device#Create-Update-Data-Stream
   def update!(params)
     res = @client.put(path, {}, params, "Content-Type" => "application/json")
 
@@ -39,7 +45,7 @@ class M2X::Client::Stream < M2X::Client::Resource
   # List values from the stream, sorted in reverse chronological order
   # (most recent values first).
   #
-  # Refer to the Stream documentation for a list of allowed parameters
+  # https://m2x.att.com/developer/documentation/v2/device#List-Data-Stream-Values
   def values(params={})
     @client.get("#{path}/values", params)
   end
@@ -49,7 +55,7 @@ class M2X::Client::Stream < M2X::Client::Resource
   #
   # This method only works for numeric streams
   #
-  # Refer to the Stream documentation for a list of allowed parameters
+  # https://m2x.att.com/developer/documentation/v2/device#Data-Stream-Sampling
   def sampling(params)
     @client.get("#{path}/sampling", params)
   end
@@ -59,13 +65,15 @@ class M2X::Client::Stream < M2X::Client::Resource
   #
   # This method only works for numeric streams
   #
-  # Refer to the Stream documentation for a list of allowed parameters
+  # https://m2x.att.com/developer/documentation/v2/device#Data-Stream-Stats
   def stats(params={})
     @client.get("#{path}/stats", params)
   end
 
   # Update the current value of the stream. The timestamp
   # is optional. If ommited, the current server time will be used
+  #
+  # https://m2x.att.com/developer/documentation/v2/device#Update-Data-Stream-Value
   def update_value(value, timestamp=nil)
     params = { value: value }
 
@@ -83,6 +91,8 @@ class M2X::Client::Stream < M2X::Client::Resource
   #       { "timestamp": <Time in ISO8601>, "value": y },
   #       [ ... ]
   #     ]
+  #
+  # https://m2x.att.com/developer/documentation/v2/device#Post-Data-Stream-Values
   def post_values(values)
     params = { values: values }
 
@@ -91,6 +101,8 @@ class M2X::Client::Stream < M2X::Client::Resource
 
   # Delete values in a stream by a date range
   # The `start` and `stop` parameters should be ISO8601 timestamps
+  #
+  # https://m2x.com/developer/documentation/v2/device#Delete-Data-Stream-Values
   def delete_values!(start, stop)
     params = { from: start, end: stop }
 
