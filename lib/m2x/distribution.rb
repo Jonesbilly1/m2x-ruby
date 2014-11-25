@@ -5,10 +5,10 @@ class M2X::Client::Distribution < M2X::Client::Resource
   PATH = "/distributions"
 
   class << self
-    # List/search all the distributions that belong to the user associated
-    # with the M2X API key supplied when initializing M2X
+    # Retrieve list of device distributions accessible by the authenticated
+    # API key.
     #
-    # Refer to the distribution documentation for the full list of supported parameters
+    # https://m2x.att.com/developer/documentation/v2/distribution#List-Distributions
     def list(client, params={})
       res = client.get(PATH, params)
 
@@ -16,9 +16,9 @@ class M2X::Client::Distribution < M2X::Client::Resource
     end
     alias_method :search, :list
 
-    # Create a new distribution
+    # Create a new device distribution
     #
-    # Refer to the distribution documentation for the full list of supported parameters
+    # https://m2x.att.com/developer/documentation/v2/distribution#Create-Distribution
     def create!(client, params)
       res = client.post(PATH, nil, params, "Content-Type" => "application/json")
 
@@ -30,7 +30,9 @@ class M2X::Client::Distribution < M2X::Client::Resource
     @path ||= "#{ PATH }/#{ URI.encode(@attributes.fetch("id")) }"
   end
 
-  # List/search all devices in the distribution
+  # Retrieve list of devices added to the specified distribution.
+  #
+  # https://m2x.att.com/developer/documentation/v2/distribution#List-Devices-from-an-existing-Distribution
   def devices(params={})
     res = @client.get("#{path}/devices", params)
 
@@ -41,6 +43,8 @@ class M2X::Client::Distribution < M2X::Client::Resource
   #
   # Accepts a `serial` parameter, that must be a unique identifier
   # within this distribution.
+  #
+  # https://m2x.att.com/developer/documentation/v2/distribution#Add-Device-to-an-existing-Distribution
   def add_device(serial)
     res = @client.post("#{path}/devices", nil, { serial: serial }, "Content-Type" => "application/json")
 
