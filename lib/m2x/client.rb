@@ -2,6 +2,14 @@ require "net/http"
 require "json"
 require "openssl"
 
+# Interface for connecting with M2X API service.
+#
+# This class provides convenience methods to access M2X most common resources.
+# It can also be used to access any endpoint directly like this:
+#
+#     m2x = M2X::Client.new("<YOUR-API-KEY>")
+#     m2x.get("/some_path")
+#
 class M2X::Client
   DEFAULT_API_BASE    = "https://api-m2x.att.com".freeze
   DEFAULT_API_VERSION = "v2".freeze
@@ -21,46 +29,88 @@ class M2X::Client
     @api_version = api_version
   end
 
+  # Returns the status of the M2X system. The response to this endpoint is
+  # an object in which each of its attributes represents an M2X subsystem
+  # and its current status.
   def status
     get("/status")
   end
 
+  # Obtain a Device from M2X
+  #
+  # This method instantiates an instance of Device and calls `Device#view`
+  # method, returning the device instance with all its attributes initialized
   def device(id)
     M2X::Client::Device.new(self, "id" => id).tap(&:view)
   end
 
+  # Creates a new device on M2X with the specified parameters
   def create_device(params)
     M2X::Client::Device.create!(self, params)
   end
 
+  # Retrieve the list of devices accessible by the authenticated API key that
+  # meet the search criteria.
+  #
+  # See M2X::Client::Device.list for more details
   def devices(params={})
     M2X::Client::Device.list(self, params)
   end
 
+  # Search the catalog of public Devices. This allows unauthenticated
+  # users to search Devices from other users that have been marked as
+  # public, allowing them to read public Device metadata, locations,
+  # streams list, and view each Devices' stream metadata and its values.
+  #
+  # See M2X::Client::Device.catalog for more details
   def device_catalog(params={})
     M2X::Client::Device.catalog(self, params)
   end
 
+  # Obtain a Distribution from M2X
+  #
+  # This method instantiates an instance of Distribution and calls
+  # `Distribution#view` method, returning the device instance with all
+  # its attributes initialized
   def distribution(id)
     M2X::Client::Distribution.new(self, "id" => id).tap(&:view)
   end
 
+  # Creates a new device distribution on M2X with the specified parameters
   def create_distribution(params)
     M2X::Client::Distribution.create!(self, params)
   end
 
+  # Retrieve list of device distributions accessible by the authenticated
+  # API key.
+  #
+  # See M2X::Client::Distribution.list for more details
   def distributions(params={})
     M2X::Client::Distribution.list(self, params)
   end
 
+  # Obtain an API Key from M2X
+  #
+  # This method instantiates an instance of Key and calls
+  # `Key#view` method, returning the key instance with all
+  # its attributes initialized
   def key(key)
     M2X::Client::Key.new(self, "key" => key).tap(&:view)
   end
 
+  # Create a new API Key
+  #
+  # Note that, according to the parameters sent, you can create a
+  # Master API Key or a Device/Stream API Key.
+  #
+  # See M2X::Client::Key.create! for more details
   def create_key(params)
     M2X::Client::Key.create!(self, params)
   end
 
+  # Retrieve list of keys associated with the user account.
+  #
+  # See M2X::Client::Key.list for more details
   def keys
     M2X::Client::Key.list(self)
   end
@@ -96,6 +146,7 @@ class M2X::Client
     @last_response = Response.new(res)
   end
 
+  # Define methods for accessing M2X REST API
   [:get, :post, :put, :delete, :head, :options, :patch].each do |verb|
     define_method verb do |path, qs=nil, params=nil, headers=nil|
       request(verb, path, qs, params, headers)
