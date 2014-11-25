@@ -9,8 +9,8 @@ GARAGE  = ENV.fetch("GARAGE")
 
 client = M2X::Client.new(KEY)
 
-kitchen   = client.device(KITCHEN)
-garage    = client.device(GARAGE)
+kitchen = client.device(KITCHEN)
+garage  = client.device(GARAGE)
 
 # Create the streams if they don't exist
 kitchen.create_stream("humidity")
