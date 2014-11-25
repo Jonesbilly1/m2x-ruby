@@ -3,8 +3,8 @@ require "json"
 require "openssl"
 
 class M2X::Client
-  API_BASE    = "https://api-m2x.att.com".freeze
-  API_VERSION = "v2".freeze
+  DEFAULT_API_BASE    = "https://api-m2x.att.com".freeze
+  DEFAULT_API_VERSION = "v2".freeze
 
   CA_FILE = File.expand_path("../cacert.pem", __FILE__)
 
@@ -104,11 +104,11 @@ class M2X::Client
 
   private
   def api_base
-    @api_base ||= API_BASE
+    @api_base ||= DEFAULT_API_BASE
   end
 
   def api_version
-    @api_version ||= API_VERSION
+    @api_version ||= DEFAULT_API_VERSION
   end
 
   def versioned(path)
