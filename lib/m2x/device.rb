@@ -5,22 +5,22 @@ class M2X::Client::Device < M2X::Client::Resource
   PATH = "/devices"
 
   class << self
-    # List/search all the devices that belong to the user associated
-    # with the M2X API key supplied when initializing M2X
+    # Retrieve the list of devices accessible by the authenticated API key that
+    # meet the search criteria.
     #
-    # Refer to the device documentation for the full list of supported parameters
+    # https://m2x.att.com/developer/documentation/v2/device#List-Search-Devices
     def list(client, params={})
       res = client.get(PATH, params)
 
       res.json["devices"].map{ |atts| new(client, atts) } if res.success?
     end
 
-    # Search the catalog of public devices. This allows unauthenticated
-    # users to search devices from other users that has been marked as
-    # public, allowing only to read their metadata, locations, list
-    # its streams, view each stream metadata and its values.
+    # Search the catalog of public Devices. This allows unauthenticated
+    # users to search Devices from other users that have been marked as
+    # public, allowing them to read public Device metadata, locations,
+    # streams list, and view each Devices' stream metadata and its values.
     #
-    # Refer to the device documentation for the full list of supported parameters
+    # https://m2x.att.com/developer/documentation/v2/device#List-Search-Public-Devices-Catalog
     def catalog(client, params={})
       res = client.get("#{PATH}/catalog", params)
 
@@ -29,13 +29,15 @@ class M2X::Client::Device < M2X::Client::Resource
 
     # List Device Groups
     # Retrieve the list of device groups for the authenticated user.
+    #
+    # https://m2x.att.com/developer/documentation/v2/device#List-Device-Groups
     def groups(client)
       client.get("#{PATH}/groups")
     end
 
     # Create a new device
     #
-    # Refer to the device documentation for the full list of supported parameters
+    # https://m2x.att.com/developer/documentation/v2/device#Create-Device
     def create!(client, params)
       res = client.post(PATH, nil, params, "Content-Type" => "application/json")
 
@@ -47,44 +49,80 @@ class M2X::Client::Device < M2X::Client::Resource
     @path ||= "#{ PATH }/#{ URI.encode(@attributes.fetch("id")) }"
   end
 
-  # Return a list of access log to the supplied device
+  # View Request Log
+  # Retrieve list of HTTP requests received lately by the specified device
+  # (up to 100 entries).
+  #
+  # https://m2x.att.com/developer/documentation/v2/device#View-Request-Log
   def log
     @client.get("#{path}/log")
   end
 
-  # Return the current location of the supplied device
+  # Get location details of an existing Device.
   #
   # Note that this method can return an empty value (response status
   # of 204) if the device has no location defined.
+  #
+  # https://m2x.att.com/developer/documentation/v2/device#Read-Device-Location
   def location
     @client.get("#{path}/location")
   end
 
-  # Update the current location of the device
+  # Update the current location of the specified device.
+  #
+  # https://m2x.att.com/developer/documentation/v2/device#Update-Device-Location
   def update_location(params)
     @client.put("#{path}/location", nil, params, "Content-Type" => "application/json")
   end
 
-  # Post stream updates
+  # Post Device Updates (Multiple Values to Multiple Streams)
   #
   # This method allows posting multiple values to multiple streams
   # belonging to a device and optionally, the device location.
   #
   # All the streams should be created before posting values using this method.
   #
-  # Refer to the Device documentation for details
+  # The `values` parameter contains an object with one attribute per each stream to be updated.
+  # The value of each one of these attributes is an array of timestamped values.
+  #
+  #      {
+  #         temperature: [
+  #                        { "timestamp": <Time in ISO8601>, "value": x },
+  #                        { "timestamp": <Time in ISO8601>, "value": y },
+  #                      ],
+  #         humidity:    [
+  #                        { "timestamp": <Time in ISO8601>, "value": x },
+  #                        { "timestamp": <Time in ISO8601>, "value": y },
+  #                      ]
+  #
+  #      }
+  #
+  # The optional location attribute can contain location information that will
+  # be used to update the current location of the specified device
+  #
+  # https://staging.m2x.sl.attcompute.com/developer/documentation/v2/device#Post-Device-Updates--Multiple-Values-to-Multiple-Streams-
   def post_updates(params)
     @client.post("#{path}/updates", nil, params, "Content-Type" => "application/json")
   end
 
+  # Retrieve list of data streams associated with the device.
+  #
+  # https://m2x.att.com/developer/documentation/v2/device#List-Data-Streams
   def streams
     ::M2X::Client::Stream.list(@client, self)
   end
 
+  # Get details of a specific data Stream associated with the device
+  #
+  # https://m2x.att.com/developer/documentation/v2/device#View-Data-Stream
   def stream(name)
     ::M2X::Client::Stream.fetch(@client, self, name)
   end
 
+  # Update a data stream associated with the Device
+  # (if a stream with this name does not exist it gets created).
+  #
+  # https://m2x.att.com/developer/documentation/v2/device#Create-Update-Data-Stream
   def update_stream(name, params={})
     stream = ::M2X::Client::Stream.new(@client, self, "name" => name)
 
