@@ -5,8 +5,9 @@ class M2X::Client::Key < M2X::Client::Resource
   PATH = "/keys"
 
   class << self
-    # List all the Master API Key that belongs to the user associated
-    # with the AT&T M2X API key supplied when initializing M2X
+    # Retrieve list of keys associated with the user account.
+    #
+    # https://m2x.att.com/developer/documentation/v2/keys#List-Keys
     def list(client, params={})
       res = client.get(PATH, params)
 
@@ -16,9 +17,9 @@ class M2X::Client::Key < M2X::Client::Resource
     # Create a new API Key
     #
     # Note that, according to the parameters sent, you can create a
-    # Master API Key or a Device/Stream API Key. See
-    # https://m2x.att.com/developer/documentation/keys#Create-Key for
-    # details on the parameters accepted by this method.
+    # Master API Key or a Device/Stream API Key.
+    #
+    # https://m2x.att.com/developer/documentation/v2/keys#Create-Key
     def create!(client, params={})
       res = client.post(PATH, nil, params, "Content-Type" => "application/json")
 
@@ -35,6 +36,8 @@ class M2X::Client::Key < M2X::Client::Resource
   # Note that if you regenerate the key that you're using for
   # authentication then you would need to change your scripts to
   # start using the new key token for all subsequent requests.
+  #
+  # https://m2x.att.com/developer/documentation/v2/keys#Regenerate-Key
   def regenerate
     res = @client.post("#{path}/regenerate", nil, {})
 
