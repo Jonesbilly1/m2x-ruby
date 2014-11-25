@@ -3,7 +3,7 @@ require "json"
 require "openssl"
 
 class M2X::Client
-  API_BASE    = "http://api-m2x.att.com".freeze
+  API_BASE    = "https://api-m2x.att.com".freeze
   API_VERSION = "v2".freeze
 
   CA_FILE = File.expand_path("../cacert.pem", __FILE__)
