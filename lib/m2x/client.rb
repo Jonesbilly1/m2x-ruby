@@ -16,7 +16,7 @@ class M2X::Client
 
   CA_FILE = File.expand_path("../cacert.pem", __FILE__)
 
-  USER_AGENT = "M2X::Client/#{M2X::Client::VERSION} #{RUBY_ENGINE}/#{RUBY_VERSION} (#{RUBY_PLATFORM})".freeze
+  USER_AGENT = "M2X-Ruby/#{M2X::Client::VERSION} #{RUBY_ENGINE}/#{RUBY_VERSION} (#{RUBY_PLATFORM})".freeze
 
   attr_accessor :api_key
   attr_accessor :api_base
