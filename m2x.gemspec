@@ -16,6 +16,7 @@ Gem::Specification.new do |s|
                 "LICENSE",
                 "README.md",
                 "lib/**/*.rb",
+                "lib/m2x/cacert.pem",
                 "*.gemspec",
                 "test/*.*"
                ]
