@@ -1,6 +1,6 @@
 # AT&T's M2X Ruby Client
 
-[AT&T M2X](http://m2x.att.com) is a cloud-based fully managed time-series data storage service for network connected machine-to-machine (M2M) devices and the Internet of Things (IoT). 
+[AT&T M2X](http://m2x.att.com) is a cloud-based fully managed time-series data storage service for network connected machine-to-machine (M2M) devices and the Internet of Things (IoT).
 
 The [AT&T M2X API](https://m2x.att.com/developer/documentation/overview) provides all the needed operations and methods to connect your devices to AT&T's M2X service. This library aims to provide a simple wrapper to interact with the AT&T M2X API for [Ruby](https://www.ruby-lang.org/en/). Refer to the [Glossary of Terms](https://m2x.att.com/developer/documentation/glossary) to understand the nomenclature used throughout this documentation.
 
@@ -64,8 +64,7 @@ API_KEY=<YOUR-API-KEY> DEVICE=<YOUR-DEVICE-ID> ./m2x-uptime.rb
 #! /usr/bin/env ruby
 
 #
-# See https://github.com/attm2x/m2x-ruby/blob/master/README.md#example-usage
-# for instructions
+# See https://github.com/attm2x/m2x-ruby#example for instructions
 #
 
 require "time"

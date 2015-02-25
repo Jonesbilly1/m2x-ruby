@@ -1,8 +1,7 @@
 #! /usr/bin/env ruby
 
 #
-# See https://github.com/attm2x/m2x-ruby/blob/master/README.md#example-usage
-# for instructions
+# See https://github.com/attm2x/m2x-ruby#example for instructions
 #
 
 require "time"
