@@ -77,7 +77,7 @@ class M2X::Client::Stream < M2X::Client::Resource
   def update_value(value, timestamp=nil)
     params = { value: value }
 
-    params[:at] = timestamp if timestamp
+    params[:timestamp] = timestamp if timestamp
 
     @client.put("#{path}/value", nil, params, "Content-Type" => "application/json")
   end
