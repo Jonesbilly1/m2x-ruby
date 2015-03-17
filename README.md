@@ -1,4 +1,4 @@
-# AT&T's M2X Ruby Client
+# AT&T M2X Ruby Client
 
 [AT&T M2X](http://m2x.att.com) is a cloud-based fully managed time-series data storage service for network connected machine-to-machine (M2M) devices and the Internet of Things (IoT).
 
