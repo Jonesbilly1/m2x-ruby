@@ -71,7 +71,7 @@ class M2X::Client::Stream < M2X::Client::Resource
   end
 
   # Update the current value of the stream. The timestamp
-  # is optional. If ommited, the current server time will be used
+  # is optional. If omitted, the current server time will be used
   #
   # https://m2x.att.com/developer/documentation/v2/device#Update-Data-Stream-Value
   def update_value(value, timestamp=nil)
