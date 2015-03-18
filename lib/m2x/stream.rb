@@ -7,7 +7,7 @@ class M2X::Client::Stream < M2X::Client::Resource
     #
     # https://m2x.att.com/developer/documentation/v2/device#View-Data-Stream
     def fetch(client, device, name)
-      res = client.get("#{device.path}/streams/#{name}")
+      res = client.get("#{device.path}/streams/#{URI.encode(name)}")
 
       new(client, device, res.json) if res.success?
     end
