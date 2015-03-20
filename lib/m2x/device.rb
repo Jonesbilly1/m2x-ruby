@@ -102,7 +102,7 @@ class M2X::Client::Device < M2X::Client::Resource
   # The optional location attribute can contain location information that will
   # be used to update the current location of the specified device
   #
-  # https://staging.m2x.sl.attcompute.com/developer/documentation/v2/device#Post-Device-Updates--Multiple-Values-to-Multiple-Streams-
+  # https://m2x.att.com/developer/documentation/v2/device#Post-Device-Updates--Multiple-Values-to-Multiple-Streams-
   def post_updates(params)
     @client.post("#{path}/updates", nil, params, "Content-Type" => "application/json")
   end
