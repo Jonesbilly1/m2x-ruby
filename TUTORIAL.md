@@ -1,6 +1,6 @@
 # AT&T M2X Ruby Tutorial
 
-To follow along with this AT&T M2X Ruby tutorial, you'll need the `m2x` gem installed (run `gem install m2x`) an AT&T M2X account (sign up for one [here](https://m2x.att.com/signup)), and the Master API Key from your account (you can find it [here](https://m2x.att.com/account#master-keys) after logging in). Once you have all this, you're ready to begin.
+To follow along with this AT&T M2X Ruby tutorial, you'll need the `m2x` gem installed (run `gem install m2x`) an [AT&T M2X](https://m2x.att.com/) account (sign up for one [here](https://m2x.att.com/signup)), and the Master API Key from your account (you can find it [here](https://m2x.att.com/account#master-keys) after logging in). Once you have all this, you're ready to begin.
 
 ## Getting Started
 
@@ -26,7 +26,7 @@ irb> client = M2X::Client.new(my_api_key)
 
 ## Creating a Device
 
-Let's use the client object create a new device. We must provide a name and a visibility level, and we can add an optional description here as well.
+Let's use the client object to create a new Device. We must provide a name and a visibility level, and we can add an optional description here as well.
 ```ruby
 irb> device = client.create_device(
        name: "My Sensor",
