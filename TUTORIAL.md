@@ -1,4 +1,3 @@
-
 # AT&T M2X Ruby Tutorial
 
 To follow along with this AT&T M2X Ruby tutorial, you'll need the `m2x` gem installed (run `gem install m2x`) an AT&T M2X account (sign up for one [here](https://m2x.att.com/signup)), and the Master API Key from your account (you can find it [here](https://m2x.att.com/account#master-keys) after logging in). Once you have all this, you're ready to begin.
@@ -167,3 +166,197 @@ irb> device["location"]
     }
 ```
 
+That's better. Incidentally, `M2X::Client::Device` has a `location` method that we could have used instead, which always fetches the latest location and returns it in the JSON data of a response object.
+```ruby
+irb> device.location.json["name"]
+=>  "Storage Room"
+irb> device.update_location(
+       name: "Elsewhere",
+       latitude: -37.9788423562422,
+       longitude: -57.5478776916862,
+     ).success?
+=>  true
+irb> device.location.json["name"]
+=>  "Elsewhere"
+```
+
+## Creating Data Streams
+
+Our device is set up now, but it's not that useful if it has no data streams to consume. Let's add a few, using the `M2X::Client::Device#create_stream` method.
+```ruby
+irb> device.streams
+=>  []
+irb> device.create_stream("temperature",
+       unit: { label: "celsius", symbol: "C" }
+     )
+irb> device.create_stream("precipitation",
+       type: "alphanumeric"
+     )
+irb> device.streams
+=>  [
+      <M2X::Client::Stream: {
+        "name"=>"temperature",
+        "display_name"=>nil,
+        "value"=>nil,
+        "latest_value_at"=>nil,
+        "type"=>"numeric",
+        "unit"=>{"label"=>"celsius", "symbol"=>"C"},
+        "url"=>"http://api-m2x.att.com/v2/devices/cad0c5a8fd8968103e8b3994325e00f0/streams/temperature",
+        "created"=>"2015-03-24T16:23:42.349Z",
+        "updated"=>"2015-03-24T16:23:42.349Z"
+      }>,
+      <M2X::Client::Stream: {
+        "name"=>"precipitation",
+        "display_name"=>nil,
+        "value"=>nil,
+        "latest_value_at"=>nil,
+        "type"=>"alphanumeric",
+        "unit"=>{"label"=>nil, "symbol"=>nil},
+        "url"=>"http://api-m2x.att.com/v2/devices/cad0c5a8fd8968103e8b3994325e00f0/streams/precipitation",
+        "created"=>"2015-03-24T16:29:14.924Z",
+        "updated"=>"2015-03-24T16:29:14.924Z"
+      }>
+    ]
+```
+
+Now that these streams exist, we can get object handles to them at any time (or from any other program) by using the device object to fetch them by name.
+```ruby
+irb> temperature = device.stream("temperature")
+=>  <M2X::Client::Stream: {
+      "name"=>"temperature",
+      "display_name"=>nil,
+      "value"=>nil,
+      "latest_value_at"=>nil,
+      "type"=>"numeric",
+      "unit"=>{"label"=>"celsius", "symbol"=>"C"},
+      "url"=>"http://api-m2x.att.com/v2/devices/cad0c5a8fd8968103e8b3994325e00f0/streams/temperature",
+      "created"=>"2015-03-24T16:23:42.349Z",
+      "updated"=>"2015-03-24T16:23:42.349Z"
+    }>
+irb> precipitation = device.stream("precipitation")
+=>  <M2X::Client::Stream: {
+      "name"=>"precipitation",
+      "display_name"=>nil,
+      "value"=>nil,
+      "latest_value_at"=>nil,
+      "type"=>"alphanumeric",
+      "unit"=>{"label"=>nil, "symbol"=>nil},
+      "url"=>"http://api-m2x.att.com/v2/devices/cad0c5a8fd8968103e8b3994325e00f0/streams/precipitation",
+      "created"=>"2015-03-24T16:29:14.924Z",
+      "updated"=>"2015-03-24T16:29:14.924Z"
+    }>
+```
+
+Let's send a value to our precipitation stream to describe the weather we're seeing right now, then check that we can also read the value.
+```ruby
+irb> precipitation.update_value("rain").success?
+=>  true
+irb> precipitation.values.json
+=>  {
+      "limit"=>100,
+      "end"=>"2015-03-24T16:46:50.872Z",
+      "values"=>[
+        {"timestamp"=>"2015-03-24T16:46:49.550Z", "value"=>"rain"}
+      ]
+    }
+irb> precipitation.values.json["values"].first["value"]
+=>  "rain"
+```
+
+Let's add some more data to our precipitation stream to describe some weather we've seen in the past few days, using timestamps to indicate specific times in the past. We'll need to load the `time` library in order to send the timestamps in `iso8601` format.
+```ruby
+irb> require 'time'
+=>  true
+irb> yesterday = Time.now - 24*60*60
+=>  2015-03-23 09:52:00 -0700
+irb> two_days_ago = yesterday - 24*60*60
+=>  2015-03-24 09:52:00 -0700
+irb> precipitation.update_value("heavy rain", yesterday.iso8601).success?
+=>  true
+irb> precipitation.update_value("snow", two_days_ago.iso8601).success?
+=>  true
+irb> precipitation.values.json
+=>  {
+      "limit"=>100,
+      "end"=>"2015-03-24T16:53:21.542Z",
+      "values"=>[
+        {"timestamp"=>"2015-03-24T16:46:49.550Z", "value"=>"rain"},
+        {"timestamp"=>"2015-03-23T16:51:49.000Z", "value"=>"heavy rain"},
+        {"timestamp"=>"2015-03-22T16:51:49.000Z", "value"=>"snow"}
+      ]
+    }
+irb> precipitation.values.json["values"].map { |entry| entry["value"] }
+=> ["rain", "heavy rain", "snow"]
+```
+
+Note that the `"limit"=>100` attribute indicates that the maximum number of values we'll receive in the response is 100. If we like, we can specify a different limit in the method parameters, like if we wanted to fetch the latest value only (to save on bandwidth and memory).
+```ruby
+irb> precipitation.values(limit: 1).json
+=>  {
+      "limit"=>1,
+      "end"=>"2015-03-24T16:55:36.402Z",
+      "values"=>[
+        {"timestamp"=>"2015-03-24T16:46:49.550Z", "value"=>"rain"}
+      ]
+    }
+irb> precipitation.values(limit: 1).json["values"].first["value"]
+=> "rain"
+```
+
+Now let's post some temperature readings from the same times, this time posting the entire batch of values in the same API call.
+```ruby
+irb> temperature.post_values([
+       {"timestamp"=>"2015-03-24T16:46:49.550Z", "value"=> 5.8},
+       {"timestamp"=>"2015-03-23T16:51:49.000Z", "value"=> 3.1},
+       {"timestamp"=>"2015-03-22T16:51:49.000Z", "value"=>-2.5},
+     ]).success?
+=>  true
+irb> temperature.values.json["values"].map { |entry| entry["value"] }
+=>  [5.8, 3.1, -2.5]
+```
+
+For even more efficiency, we can post updates to multiple data streams in a single API call at the device level. Let's add temperature and precipitation data for the rest of the past week.
+```ruby
+irb> device.post_updates(values: {
+       "precipitation"=>[
+         {"timestamp"=>"2015-03-21T16:51:49.000Z", "value"=>"none"},
+         {"timestamp"=>"2015-03-20T16:51:49.000Z", "value"=>"freezing rain"},
+         {"timestamp"=>"2015-03-19T16:51:49.000Z", "value"=>"light rain"},
+         {"timestamp"=>"2015-03-18T16:51:49.000Z", "value"=>"none"},
+       ],
+       "temperature"=>[
+         {"timestamp"=>"2015-03-21T16:51:49.000Z", "value"=>-1.2},
+         {"timestamp"=>"2015-03-20T16:51:49.000Z", "value"=>-0.3},
+         {"timestamp"=>"2015-03-19T16:51:49.000Z", "value"=> 0.5},
+         {"timestamp"=>"2015-03-18T16:51:49.000Z", "value"=> 1.1},
+       ],
+     }).success?
+=>  true
+irb> precipitation.values.json["values"].map { |entry| entry["value"] }
+=>  ["rain", "heavy rain", "snow", "none", "freezing rain", "light rain", "none"]
+irb> temperature.values.json["values"].map { |entry| entry["value"] }
+=>  [5.8, 3.1, -2.5, -1.2, -0.3, 0.5, 1.1]
+```
+
+Because the `temperature` stream has `"type"=>"numeric"`, we can fetch calculated numerical statistics from the M2X API about the data in the stream.
+```ruby
+irb> temperature.stats.json
+=>  {
+      "end"=>"2015-03-24T18:02:49.010Z",
+      "stats"=>{
+        "count"=>7.0,
+        "min"=>-2.5,
+        "max"=>5.8,
+        "avg"=>"0.928571E0",
+        "stddev"=>2.576107
+      }
+    }
+irb> average_temp = temperature.stats.json["stats"]["avg"].to_f
+=>  0.928571
+```
+
+## Next Steps
+
+We've seen that using a Ruby REPL is a great way to interactively explore the AT&T M2X API, and we've walked through some basic uses of the Ruby client library. However, this tutorial is by no means exhaustive, and there are many more features in both the M2X API and the Ruby client library for it.
+
+Explore [the complete M2X API documentation](https://m2x.att.com/developer/documentation/v2/device) and [the Ruby client library source code on GitHub](https://github.com/attm2x/m2x-ruby) to learn more about what's possible with AT&T M2X in your Ruby applications.
