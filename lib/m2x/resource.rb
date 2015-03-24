@@ -20,6 +20,12 @@ class M2X::Client::Resource
     @attributes = res.json if res.success?
   end
 
+  # Refresh the resource details and return self
+  def refresh
+    view
+    self
+  end
+
   # Update an existing resource details
   def update!(params)
     @client.put(path, nil, params, "Content-Type" => "application/json")
