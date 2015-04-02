@@ -29,12 +29,12 @@ class M2X::Client::Device < M2X::Client::Resource
       res.json["devices"].map{ |atts| new(client, atts) } if res.success?
     end
 
-    # List Device Groups
-    # Retrieve the list of device groups for the authenticated user.
+    # List Device Tags
+    # Retrieve the list of device tags for the authenticated user.
     #
-    # https://m2x.att.com/developer/documentation/v2/device#List-Device-Groups
-    def groups(client)
-      client.get("#{PATH}/groups")
+    # https://m2x.att.com/developer/documentation/v2/device#List-Device-Tags
+    def tags(client)
+      client.get("#{PATH}/tags")
     end
 
     # Create a new device
