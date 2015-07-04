@@ -118,6 +118,22 @@ class M2X::Client
     M2X::Client::Key.list(self)
   end
 
+  def time
+    get("/time").json
+  end
+
+  def time_seconds
+    get("/time/seconds").raw
+  end
+
+  def time_millis
+    get("/time/millis").raw
+  end
+
+  def time_iso8601
+    get("/time/iso8601").raw
+  end
+
   # Define methods for accessing M2X REST API
   [:get, :post, :put, :delete, :head, :options, :patch].each do |verb|
     define_method verb do |path, qs=nil, params=nil, headers=nil|
