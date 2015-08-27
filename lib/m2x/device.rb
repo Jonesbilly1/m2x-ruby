@@ -114,6 +114,13 @@ class M2X::Client::Device < M2X::Client::Resource
     @client.get("#{path}/values", params)
   end
 
+  # Export Values from all Data Streams of a Device
+  #
+  # https://m2x.att.com/developer/documentation/v2/device#Export-Values-from-all-Data-Streams-of-a-Device
+  def values_export(params = {})
+    @client.get("#{path}/values/export.csv", params)
+  end
+
   # Retrieve list of data streams associated with the device.
   #
   # https://m2x.att.com/developer/documentation/v2/device#List-Data-Streams
