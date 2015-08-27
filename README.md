@@ -48,6 +48,11 @@ This provides an interface to your data in M2X
   keys = m2x.keys
   ```
 
+- [Job](lib/m2x/job.rb)
+  ```ruby
+  job = m2x.job("<JOB-ID>")
+  ```
+
 Refer to the documentation on each class for further usage instructions.
 
 ## Time

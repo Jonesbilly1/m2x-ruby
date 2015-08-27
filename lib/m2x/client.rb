@@ -92,6 +92,14 @@ class M2X::Client
     M2X::Client::Distribution.list(self, params)
   end
 
+  # Obtain a Job from M2X
+  #
+  # This method instantiates an instance of Job and calls `Job#view`
+  # method, returning the job instance with all its attributes initialized
+  def job(id)
+    M2X::Client::Job.new(self, "id" => id).tap(&:view)
+  end
+
   # Obtain an API Key from M2X
   #
   # This method instantiates an instance of Key and calls
