@@ -107,6 +107,13 @@ class M2X::Client::Device < M2X::Client::Resource
     @client.post("#{path}/updates", nil, params, "Content-Type" => "application/json")
   end
 
+  # List Values from all Data Streams of a Device
+  #
+  # https://m2x.att.com/developer/documentation/v2/device#List-Values-from-all-Data-Streams-of-a-Device
+  def values(params = {})
+    @client.get("#{path}/values", params)
+  end
+
   # Retrieve list of data streams associated with the device.
   #
   # https://m2x.att.com/developer/documentation/v2/device#List-Data-Streams
