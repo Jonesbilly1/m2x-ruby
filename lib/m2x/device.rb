@@ -163,6 +163,13 @@ class M2X::Client::Device < M2X::Client::Resource
     @client.get("#{path}/values/export.csv", params)
   end
 
+  # Search Values from all Data Streams of a Device
+  #
+  # https://m2x.att.com/developer/documentation/v2/device#Search-Values-from-all-Data-Streams-of-a-Device
+  def values_search(params)
+    @client.get("#{path}/values/search", nil, params, "Content-Type" => "application/json")
+  end
+
   # Retrieve list of data streams associated with the device.
   #
   # https://m2x.att.com/developer/documentation/v2/device#List-Data-Streams
