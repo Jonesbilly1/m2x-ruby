@@ -50,11 +50,18 @@ class M2X::Client
     M2X::Client::Device.create!(self, params)
   end
 
-  # Retrieve the list of devices accessible by the authenticated API key that
-  # meet the search criteria.
+  # Retrieve the list of devices accessible by the authenticated API key
   #
   # See M2X::Client::Device.list for more details
   def devices(params={})
+    M2X::Client::Device.list(self, params)
+  end
+
+  # Retrieve the list of devices accessible by the authenticated API key that
+  # meet the search criteria.
+  #
+  # See M2X::Client::Device.search for more details
+  def search_devices(params={})
     M2X::Client::Device.list(self, params)
   end
 

@@ -5,12 +5,21 @@ class M2X::Client::Device < M2X::Client::Resource
   PATH = "/devices"
 
   class << self
+    # Retrieve the list of devices accessible by the authenticated API key
+    #
+    # https://m2x.att.com/developer/documentation/v2/device#List-Devices
+    def list(client, params={})
+      res = client.get(PATH, params)
+
+      res.json["devices"].map{ |atts| new(client, atts) } if res.success?
+    end
+
     # Retrieve the list of devices accessible by the authenticated API key that
     # meet the search criteria.
     #
-    # https://m2x.att.com/developer/documentation/v2/device#List-Search-Devices
-    def list(client, params={})
-      res = client.get(PATH, params)
+    # https://m2x.att.com/developer/documentation/v2/device#Search-Devices
+    def search(client, params={})
+      res = client.get("#{PATH}/search", params)
 
       res.json["devices"].map{ |atts| new(client, atts) } if res.success?
     end
