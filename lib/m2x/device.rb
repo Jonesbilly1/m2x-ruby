@@ -107,6 +107,39 @@ class M2X::Client::Device < M2X::Client::Resource
     @client.post("#{path}/updates", nil, params, "Content-Type" => "application/json")
   end
 
+  # Post Device Update (Single Value to Multiple Streams)
+  #
+  # This method allows posting a single value to multiple streams
+  # belonging to a device and optionally, the device's location.
+  #
+  # All the streams should be created before posting values using this method.
+  #
+  # The `params` parameter accepts a Hash which can contain the following keys:
+  #   - values:    A Hash in which the keys are the stream names and the values
+  #                hold the stream values.
+  #   - location:  (optional) A hash with the current location of the specified
+  #                device.
+  #   - timestamp: (optional) The timestamp for all the passed values and
+  #                location. If ommited, the M2X server's time will be used.
+  #
+  #      {
+  #         values: {
+  #             temperature: 30,
+  #             humidity:    80
+  #         },
+  #         location: {
+  #           name:      "Storage Room",
+  #           latitude:  -37.9788423562422,
+  #           longitude: -57.5478776916862,
+  #           elevation: 5
+  #         }
+  #      }
+  #
+  # https://m2x.att.com/developer/documentation/v2/device#Post-Device-Update--Single-Values-to-Multiple-Streams-
+  def post_update(params)
+    @client.post("#{path}/update", nil, params, "Content-Type" => "application/json")
+  end
+
   # List Values from all Data Streams of a Device
   #
   # https://m2x.att.com/developer/documentation/v2/device#List-Values-from-all-Data-Streams-of-a-Device
