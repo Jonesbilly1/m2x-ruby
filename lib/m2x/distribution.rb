@@ -1,3 +1,5 @@
+require_relative "./resource"
+
 # Wrapper for AT&T M2X Distribution API
 # https://m2x.att.com/developer/documentation/v2/distribution
 class M2X::Client::Distribution < M2X::Client::Resource

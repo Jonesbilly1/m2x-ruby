@@ -1,3 +1,5 @@
+require_relative "./resource"
+
 # Wrapper for AT&T M2X Keys API
 # https://m2x.att.com/developer/documentation/v2/keys
 class M2X::Client::Key < M2X::Client::Resource

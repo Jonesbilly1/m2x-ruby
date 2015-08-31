@@ -1,3 +1,5 @@
+require_relative "./resource"
+
 # Wrapper for AT&T M2X Collections API
 # https://m2x.att.com/developer/documentation/v2/collections
 class M2X::Client::Collection < M2X::Client::Resource
