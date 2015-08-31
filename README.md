@@ -41,6 +41,13 @@ This provides an interface to your data in M2X
   devices = m2x.devices
   ```
 
+- [Collection](lib/m2x/collection.rb)
+  ```ruby
+  collection = m2x.collection("<COLLECTION-ID>")
+
+  collections = m2x.collections
+  ```
+
 - [Key](lib/m2x/key.rb)
   ```ruby
   key = m2x.key("<KEY-TOKEN>")

@@ -133,6 +133,26 @@ class M2X::Client
     M2X::Client::Key.list(self)
   end
 
+  # Obtain a Collection from M2X
+  #
+  # This method instantiates an instance of Collection and calls `Collection#view`
+  # method, returning the collection instance with all its attributes initialized
+  def collection(id)
+    M2X::Client::Collection.new(self, "id" => id).tap(&:view)
+  end
+
+  # Creates a new collection on M2X with the specified parameters
+  def create_collection(params)
+    M2X::Client::Collection.create!(self, params)
+  end
+
+  # Retrieve the list of collections accessible by the authenticated API key
+  #
+  # See M2X::Client::Collection.list for more details
+  def collections(params={})
+    M2X::Client::Collection.list(self, params)
+  end
+
   def time
     get("/time").json
   end
