@@ -1,8 +1,10 @@
 require_relative "./resource"
+require_relative "./metadata"
 
 # Wrapper for AT&T M2X Collections API
 # https://m2x.att.com/developer/documentation/v2/collections
 class M2X::Client::Collection < M2X::Client::Resource
+  include M2X::Client::Metadata
 
   PATH = "/collections"
 
