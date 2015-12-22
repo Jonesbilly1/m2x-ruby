@@ -81,6 +81,15 @@ class M2X::Client::Device < M2X::Client::Resource
     @client.get("#{path}/location")
   end
 
+  # Read Device Location History
+  #
+  # Get location history details of an existing Device. Returns the 30 most
+  # recently logged locations by default.
+  # https://m2x.att.com/developer/documentation/v2/device#Read-Device-Location-History
+  def location_history(params = {})
+    @client.get("#{path}/location/waypoints", params)
+  end
+
   # Update the current location of the specified device.
   #
   # https://m2x.att.com/developer/documentation/v2/device#Update-Device-Location
