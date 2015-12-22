@@ -57,6 +57,26 @@ class M2X::Client
     M2X::Client::Collection.list(self, params)
   end
 
+  # List Sent Commands
+  #
+  # See M2X::Client::Command.list for more details
+  def commands(params={})
+    M2X::Client::Command.list(self, params)
+  end
+
+  # View Command Details
+  #
+  # This method instantiates an instance of Command and calls `Command#view`
+  # method, returning the command instance with all its attributes initialized
+  def command(id)
+    M2X::Client::Command.new(self, "id" => id).tap(&:view)
+  end
+
+  # Send command
+  def send_command(params)
+    M2X::Client::Command.send!(self, params)
+  end
+
   # Obtain a Device from M2X
   #
   # This method instantiates an instance of Device and calls `Device#view`
