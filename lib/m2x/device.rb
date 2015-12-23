@@ -220,4 +220,15 @@ class M2X::Client::Device < M2X::Client::Resource
   def create_key(params)
     ::M2X::Client::Key.create!(@client, params.merge(device: self["id"]))
   end
+
+  # Device's List of Received Commands
+  #
+  # Retrieve the list of recent commands sent to the current device (as given by the API key).
+  #
+  # https://m2x.att.com/developer/documentation/v2/commands#Device-s-List-of-Received-Commands
+  def commands(params = {})
+    res = @client.get("#{path}/commands", params)
+
+    res.json["commands"].map { |atts| M2X::Client::Command.new(@client, atts) } if res.success?
+  end
 end
