@@ -231,4 +231,15 @@ class M2X::Client::Device < M2X::Client::Resource
 
     res.json["commands"].map { |atts| M2X::Client::Command.new(@client, atts) } if res.success?
   end
+
+  # Device's View of Command Details
+  #
+  # Get details of a received command including the delivery information for this device.
+  #
+  # https://m2x.att.com/developer/documentation/v2/commands#Device-s-View-of-Command-Details
+  def command(id)
+    res = @client.get("#{path}/commands/#{id}")
+
+    M2X::Client::Command.new(@client, res.json) if res.success?
+  end
 end
