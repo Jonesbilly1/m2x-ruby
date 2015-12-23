@@ -220,4 +220,40 @@ class M2X::Client::Device < M2X::Client::Resource
   def create_key(params)
     ::M2X::Client::Key.create!(@client, params.merge(device: self["id"]))
   end
+
+  # Device's List of Received Commands
+  #
+  # Retrieve the list of recent commands sent to the current device (as given by the API key).
+  #
+  # https://m2x.att.com/developer/documentation/v2/commands#Device-s-List-of-Received-Commands
+  def commands(params = {})
+    res = @client.get("#{path}/commands", params)
+
+    res.json["commands"].map { |atts| M2X::Client::Command.new(@client, atts) } if res.success?
+  end
+
+  # Device's View of Command Details
+  #
+  # Get details of a received command including the delivery information for this device.
+  #
+  # https://m2x.att.com/developer/documentation/v2/commands#Device-s-View-of-Command-Details
+  def command(id)
+    res = @client.get("#{path}/commands/#{id}")
+
+    M2X::Client::Command.new(@client, res.json) if res.success?
+  end
+
+  # Process a command
+  #
+  # https://m2x.att.com/developer/documentation/v2/commands#Device-Marks-a-Command-as-Processed
+  def process_command(id, params = {})
+    @client.post("#{path}/commands/#{id}/process", nil, params)
+  end
+
+  # Reject a command
+  #
+  # https://m2x.att.com/developer/documentation/v2/commands#Device-Marks-a-Command-as-Rejected
+  def reject_command(id, params = {})
+    @client.post("#{path}/commands/#{id}/reject", nil, params)
+  end
 end
