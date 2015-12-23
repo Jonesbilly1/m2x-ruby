@@ -242,4 +242,18 @@ class M2X::Client::Device < M2X::Client::Resource
 
     M2X::Client::Command.new(@client, res.json) if res.success?
   end
+
+  # Process a command
+  #
+  # https://m2x.att.com/developer/documentation/v2/commands#Device-Marks-a-Command-as-Processed
+  def process_command(id, params = {})
+    @client.post("#{path}/commands/#{id}/process", nil, params)
+  end
+
+  # Reject a command
+  #
+  # https://m2x.att.com/developer/documentation/v2/commands#Device-Marks-a-Command-as-Rejected
+  def reject_command(id, params = {})
+    @client.post("#{path}/commands/#{id}/reject", nil, params)
+  end
 end
