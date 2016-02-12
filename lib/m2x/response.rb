@@ -11,8 +11,6 @@ class M2X::Client::Response
   end
 
   def json
-    raise "#{@response.content_type} is not application/json" unless @response.content_type == "application/json"
-
     @json ||= ::JSON.parse(raw)
   end
 
