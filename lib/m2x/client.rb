@@ -57,6 +57,20 @@ class M2X::Client
     M2X::Client::Collection.list(self, params)
   end
 
+  # Add device to collections
+  #
+  # See M2X::Client::Collection.add_device for more details
+  def add_device(id, device_id, params={})
+    M2X::Client::Collection.add_device(self, id, device_id, params)
+  end
+
+  # Remove device from collections
+  #
+  # See M2X::Client::Collection.remove_device for more details
+  def remove_device(id, device_id, params={})
+    M2X::Client::Collection.remove_device(self, id, device_id, params)
+  end
+
   # List Sent Commands
   #
   # See M2X::Client::Command.list for more details
