@@ -4,10 +4,10 @@ require "m2x"
 
 KEY         = ENV.fetch("KEY")
 DEVICE      = ENV.fetch("DEVICE")
-COLLECTION  = ENV.fetch["COLLECTION"]
+COLLECTION  = ENV.fetch("COLLECTION")
 
-client 		= M2X::Client.new(KEY)
-collection 	= client.collection(COLLECTION)
+client = M2X::Client.new(KEY)
+collection = client.collection(COLLECTION)
 
 puts "Adding device to collection: #{COLLECTION}"
 
