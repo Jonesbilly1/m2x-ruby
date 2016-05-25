@@ -11,6 +11,6 @@ collection = client.collection(COLLECTION)
 
 puts "Removing device from collection: #{COLLECTION}"
 
-res = collection.remove_device(COLLECTION, DEVICE, {})
+res = collection.remove_device(DEVICE)
 
 puts "Status Code: #{res.status}"

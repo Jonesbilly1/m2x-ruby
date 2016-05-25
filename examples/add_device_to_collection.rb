@@ -11,6 +11,6 @@ collection = client.collection(COLLECTION)
 
 puts "Adding device to collection: #{COLLECTION}"
 
-res = collection.add_device(COLLECTION, DEVICE, {})
+res = collection.add_device(DEVICE)
 
 puts "Status Code: #{res.status}"

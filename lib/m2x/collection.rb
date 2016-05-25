@@ -36,14 +36,14 @@ class M2X::Client::Collection < M2X::Client::Resource
   # Add device to collection
   #
   # https://m2x.att.com/developer/documentation/v2/collections#Add-device-to-collection
-  def add_device(id, device_id, params)
-    @client.put("#{PATH}/#{id}/devices/#{device_id}", nil, params, "Content-Type" => "application/json")
+  def add_device(device_id)
+    @client.put("#{ path }/devices/#{ device_id }")
   end
 
   # Remove device from collection
   #
   # https://m2x.att.com/developer/documentation/v2/collections#Remove-device-from-collection
-  def remove_device(id, device_id, params)
-    @client.delete("#{PATH}/#{id}/devices/#{device_id}", nil, params, "Content-Type" => "application/json")
+  def remove_device(device_id)
+    @client.delete("#{ path }/devices/#{ device_id }")
   end
 end
