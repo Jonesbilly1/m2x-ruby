@@ -26,9 +26,24 @@ class M2X::Client::Collection < M2X::Client::Resource
 
       new(client, res.json) if res.success?
     end
+
   end
 
   def path
     @path ||= "#{ PATH }/#{ URI.encode(@attributes.fetch("id")) }"
+  end
+
+  # Add device to collection
+  #
+  # https://m2x.att.com/developer/documentation/v2/collections#Add-device-to-collection
+  def add_device(device_id)
+    @client.put("#{ path }/devices/#{ device_id }")
+  end
+
+  # Remove device from collection
+  #
+  # https://m2x.att.com/developer/documentation/v2/collections#Remove-device-from-collection
+  def remove_device(device_id)
+    @client.delete("#{ path }/devices/#{ device_id }")
   end
 end
