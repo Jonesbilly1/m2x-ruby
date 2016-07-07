@@ -33,6 +33,12 @@ class M2X::Client::Collection < M2X::Client::Resource
     @path ||= "#{ PATH }/#{ URI.encode(@attributes.fetch("id")) }"
   end
 
+  def devices
+    res = @client.get("#{path}/devices")
+
+    res.json["devices"].map{ |atts| M2X::Client::Device.new(@client, atts) } if res.success?
+  end
+
   # Add device to collection
   #
   # https://m2x.att.com/developer/documentation/v2/collections#Add-device-to-collection
