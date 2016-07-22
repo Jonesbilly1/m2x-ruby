@@ -12,6 +12,6 @@ device = client.device(DEVICE)
 
 puts "Deleting location from #{FROM_TIMESTAMP} to #{END_TIMESTAMP}"
 
-res = device.delete_location(from: FROM_TIMESTAMP, end: END_TIMESTAMP)
+res = device.delete_locations!(FROM_TIMESTAMP, END_TIMESTAMP)
 
 puts "Status Code: #{res.status}"
