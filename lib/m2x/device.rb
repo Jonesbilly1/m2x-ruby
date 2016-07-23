@@ -99,6 +99,16 @@ class M2X::Client::Device < M2X::Client::Resource
     @client.put("#{path}/location", nil, params, "Content-Type" => "application/json")
   end
 
+  # Delete waypoints in a device's location history by a date range
+  # The `start` and `stop` parameters should be ISO8601 timestamps
+  #
+  # https://m2x.att.com/developer/documentation/v2/device#Delete-Location-History
+  def delete_locations!(start, stop)
+    params = { from: start, end: stop }
+
+    @client.delete("#{path}/location/waypoints", nil, params, "Content-Type" => "application/json")
+  end
+
   # Post Device Updates (Multiple Values to Multiple Streams)
   #
   # This method allows posting multiple values to multiple streams
