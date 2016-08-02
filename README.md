@@ -154,6 +154,10 @@ puts
 
 You can find this script in [`examples/m2x-uptime.rb`](examples/m2x-uptime.rb).
 
+## Tutorials
+
+Please refer to the [M2X Ruby Client Tutorials](TUTORIAL.md) for additional hands on examples.
+
 ## Versioning
 
 This gem aims to adhere to [Semantic Versioning 2.0.0](http://semver.org/). As a summary, given a version number `MAJOR.MINOR.PATCH`:
