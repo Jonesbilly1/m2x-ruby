@@ -80,79 +80,15 @@ m2x.time_iso8601
 => "2015-07-04T00:40:37.504Z"
 ```
 
-## Example
+## Examples
 
-In order to run this example, you will need a `Device ID` and `API Key`. If you don't have any, access your M2X account, create a new [Device](https://m2x.att.com/devices), and copy the `Device ID` and `API Key` values. The following script will send your CPU load average to three different streams named `load_1m`, `load_5m` and `load_15`. Check that there's no need to create a stream in order to write values into it.
+Scripts demonstrating usage of the M2X Ruby Client Library can be found in the [examples](/examples) directory. Each example leverages system environment variables to inject user specific information such as the M2X `API Key` or `Device ID`. Review the example you would like to try first to determine which environment variables are required (hint: search for `ENV.fetch` in the example). Then make sure to set the required environment variable(s) when running the script.
 
-In order to execute this script, run:
+For example, in order to run the [m2x-uptime](/examples/m2x-uptime.rb) script, you will need a `Device ID` and `API Key`. If you don't have any, access your M2X account, create a new [Device](https://m2x.att.com/devices), and copy the `Device ID` and `API Key` values. The script will send your CPU load average to three different streams named `load_1m`, `load_5m` and `load_15`. In order to execute this script, run:
 
 ```bash
-API_KEY=<YOUR-API-KEY> DEVICE=<YOUR-DEVICE-ID> ./m2x-uptime.rb
+API_KEY=<YOUR-API-KEY> DEVICE=<YOUR-DEVICE-ID> ruby ./m2x-uptime.rb
 ```
-
-```ruby
-#! /usr/bin/env ruby
-
-#
-# See https://github.com/attm2x/m2x-ruby#example for instructions
-#
-
-require "time"
-require "m2x"
-
-API_KEY = ENV.fetch("API_KEY")
-DEVICE  = ENV.fetch("DEVICE")
-
-puts "M2X::Client/#{M2X::Client::VERSION} example"
-
-@run = true
-
-stop = Proc.new { @run = false }
-
-trap(:INT,  &stop)
-trap(:TERM, &stop)
-
-# Match `uptime` load averages output for both Linux and OSX
-UPTIME_RE = /(\d+\.\d+),? (\d+\.\d+),? (\d+\.\d+)$/
-
-def load_avg
-  `uptime`.match(UPTIME_RE).captures
-end
-
-m2x = M2X::Client.new(API_KEY)
-
-# Get the device
-device = m2x.device(DEVICE)
-
-# Create the streams if they don't exist
-device.create_stream("load_1m")
-device.create_stream("load_5m")
-device.create_stream("load_15m")
-
-while @run
-  load_1m, load_5m, load_15m = load_avg
-
-  # Write the different values into AT&T M2X
-  now = Time.now.iso8601
-
-  values = {
-    load_1m:  [ { value: load_1m,  timestamp: now } ],
-    load_5m:  [ { value: load_5m,  timestamp: now } ],
-    load_15m: [ { value: load_15m, timestamp: now } ]
-  }
-
-  res = device.post_updates(values: values)
-
-  abort res.json["message"] unless res.success?
-
-  sleep 1
-end
-
-puts
-
-```
-
-You can find this script in [`examples/m2x-uptime.rb`](examples/m2x-uptime.rb).
 
 ## Tutorials
 
