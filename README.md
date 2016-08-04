@@ -84,7 +84,7 @@ m2x.time_iso8601
 
 Scripts demonstrating usage of the M2X Ruby Client Library can be found in the [examples](/examples) directory. Each example leverages system environment variables to inject user specific information such as the M2X `API Key` or `Device ID`. Review the example you would like to try first to determine which environment variables are required (hint: search for `ENV.fetch` in the example). Then make sure to set the required environment variable(s) when running the script.
 
-For example, in order to run the [m2x-uptime](/examples/m2x-uptime.rb) script, you will need a `Device ID` and `API Key`. If you don't have any, access your M2X account, create a new [Device](https://m2x.att.com/devices), and copy the `Device ID` and `API Key` values. The script will send your CPU load average to three different streams named `load_1m`, `load_5m` and `load_15`. In order to execute this script, run:
+For example, in order to run the [m2x-uptime](/examples/m2x-uptime.rb) script, you will need a `Device ID` and `API Key`. If you have yet to create an M2X Device, access your M2X account, create a new [Device](https://m2x.att.com/devices), and copy the `Device ID` and `API Key` values. The script will send your CPU load average to three different streams named `load_1m`, `load_5m` and `load_15`. In order to execute this script, run:
 
 ```bash
 API_KEY=<YOUR-API-KEY> DEVICE=<YOUR-DEVICE-ID> ruby ./m2x-uptime.rb
