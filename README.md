@@ -87,7 +87,7 @@ Scripts demonstrating usage of the M2X Ruby Client Library can be found in the [
 For example, in order to run the [m2x-uptime](/examples/m2x-uptime.rb) script, you will need a `Device ID` and `API Key`. If you have yet to create an M2X Device, access your M2X account, create a new [Device](https://m2x.att.com/devices), and copy the `Device ID` and `API Key` values. The script will send your CPU load average to three different streams named `load_1m`, `load_5m` and `load_15`. In order to execute this script, run:
 
 ```bash
-API_KEY=<YOUR-API-KEY> DEVICE=<YOUR-DEVICE-ID> ruby ./m2x-uptime.rb
+$ API_KEY=<YOUR-API-KEY> DEVICE=<YOUR-DEVICE-ID> ruby ./m2x-uptime.rb
 ```
 
 ## Tutorials
