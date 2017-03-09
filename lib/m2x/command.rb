@@ -1,5 +1,4 @@
-# Wrapper for AT&T M2X Commands API
-# https://m2x.att.com/developer/documentation/v2/commands
+# Wrapper for {https://m2x.att.com/developer/documentation/v2/commands M2X Commands} API
 class M2X::Client::Command
   extend Forwardable
 
@@ -18,12 +17,13 @@ class M2X::Client::Command
     @path ||= "#{ PATH }/#{ URI.encode(@attributes.fetch("id")) }"
   end
 
-  # View Command Details
   #
+  # Method for {https://m2x.att.com/developer/documentation/v2/commands#View-Command-Details View Command Details} endpoint.
   # Get details of a sent command including the delivery information for all
   # devices that were targetted by the command at the time it was sent.
   #
-  # https://m2x.att.com/developer/documentation/v2/commands#View-Command-Details
+  # @return {Command} The retrieved Command
+  #
   def view
     res = @client.get(path)
 
@@ -35,25 +35,31 @@ class M2X::Client::Command
   end
 
   class << self
-    # List Sent Commands
     #
+    # Method for {https://m2x.att.com/developer/documentation/v2/commands#List-Sent-Commands List Sent Commands} endpoint.
     # Retrieve the list of recent commands sent by the current user
     # (as given by the API key).
     #
-    # https://m2x.att.com/developer/documentation/v2/commands#List-Sent-Commands
+    # @param {Client} client Client API
+    # @param params Query parameters passed as keyword arguments. View M2X API Docs for listing of available parameters.
+    # @return (Array) List of {Command} objects
+    #
     def list(client, params={})
       res = client.get(PATH, params)
 
       res.json["commands"].map { |atts| new(client, atts) } if res.success?
     end
 
-    # Send Command
     #
+    # Method for {https://m2x.att.com/developer/documentation/v2/commands#Send-Command Send Command} endpoint.
     # Send a command with the given name to the given target devices.
     # The name should be a custom string defined by the user and understood by
     # the device.
     #
-    # https://m2x.att.com/developer/documentation/v2/commands#Send-Command
+    # @param {Client} client Client API
+    # @param params Query parameters passed as keyword arguments. View M2X API Docs for listing of available parameters.
+    # @return {Command} The Command that was just sent.
+    #
     def send!(client, params)
       client.post(PATH, nil, params, "Content-Type" => "application/json")
     end

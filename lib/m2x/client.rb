@@ -9,7 +9,6 @@ require "openssl"
 #
 #     m2x = M2X::Client.new("<YOUR-API-KEY>")
 #     m2x.get("/some_path")
-#
 class M2X::Client
   DEFAULT_API_BASE    = "https://api-m2x.att.com".freeze
   DEFAULT_API_VERSION = "v2".freeze
@@ -33,6 +32,8 @@ class M2X::Client
   #
   # The response to this endpoint is an object in which each of its attributes
   # represents an M2X subsystem and its current status.
+  #
+  # @return {Response} the API Status
   def status
     get("/status")
   end
@@ -46,20 +47,22 @@ class M2X::Client
   end
 
   # Creates a new collection on M2X with the specified parameters
+  #
+  # See {M2X::Client::Collection.create!} for more details
   def create_collection(params)
     M2X::Client::Collection.create!(self, params)
   end
 
   # Retrieve the list of collections accessible by the authenticated API key
   #
-  # See M2X::Client::Collection.list for more details
+  # See {M2X::Client::Collection.list} for more details
   def collections(params={})
     M2X::Client::Collection.list(self, params)
   end
 
   # List Sent Commands
   #
-  # See M2X::Client::Command.list for more details
+  # See {M2X::Client::Command.list} for more details
   def commands(params={})
     M2X::Client::Command.list(self, params)
   end
@@ -73,6 +76,8 @@ class M2X::Client
   end
 
   # Send command
+  #
+  # See {M2X::Client::Command.send!} for more details
   def send_command(params)
     M2X::Client::Command.send!(self, params)
   end
@@ -86,13 +91,15 @@ class M2X::Client
   end
 
   # Creates a new device on M2X with the specified parameters
+  #
+  # See {M2X::Client::Device.create!} for more details
   def create_device(params)
     M2X::Client::Device.create!(self, params)
   end
 
   # Retrieve the list of devices accessible by the authenticated API key
   #
-  # See M2X::Client::Device.list for more details
+  # See {M2X::Client::Device.list} for more details
   def devices(params={})
     M2X::Client::Device.list(self, params)
   end
@@ -100,7 +107,7 @@ class M2X::Client
   # Retrieve the list of devices accessible by the authenticated API key that
   # meet the search criteria.
   #
-  # See M2X::Client::Device.search for more details
+  # See {M2X::Client::Device.search} for more details
   def search_devices(params={})
     M2X::Client::Device.list(self, params)
   end
@@ -112,7 +119,7 @@ class M2X::Client
   # locations, streams list, and view each Devices' stream metadata and its
   # values.
   #
-  # See M2X::Client::Device.catalog for more details
+  # See {M2X::Client::Device.catalog} for more details
   def device_catalog(params={})
     M2X::Client::Device.catalog(self, params)
   end
@@ -127,6 +134,8 @@ class M2X::Client
   end
 
   # Creates a new device distribution on M2X with the specified parameters
+  #
+  # See {M2X::Client::Distribution.create!} for more details.
   def create_distribution(params)
     M2X::Client::Distribution.create!(self, params)
   end
@@ -134,7 +143,7 @@ class M2X::Client
   # Retrieve list of device distributions accessible by the authenticated
   # API key.
   #
-  # See M2X::Client::Distribution.list for more details
+  # See {M2X::Client::Distribution.list} for more details
   def distributions(params={})
     M2X::Client::Distribution.list(self, params)
   end
@@ -161,30 +170,42 @@ class M2X::Client
   # Note that, according to the parameters sent, you can create a
   # Master API Key or a Device/Stream API Key.
   #
-  # See M2X::Client::Key.create! for more details
+  # See {M2X::Client::Key.create!} for more details
   def create_key(params)
     M2X::Client::Key.create!(self, params)
   end
 
   # Retrieve list of keys associated with the user account.
   #
-  # See M2X::Client::Key.list for more details
+  # See {M2X::Client::Key.list} for more details
   def keys
     M2X::Client::Key.list(self)
   end
 
+  # Method for {https://m2x.att.com/developer/documentation/v2/time Time} API
+  #
+  # @return (Response) text/plain response of the server time in all three formats
   def time
     get("/time").json
   end
 
+  # Method for {https://m2x.att.com/developer/documentation/v2/time Time} API
+  #
+  # @return (Response) text/plain response of the server time in seconds
   def time_seconds
     get("/time/seconds").raw
   end
 
+  # Method for {https://m2x.att.com/developer/documentation/v2/time Time} API
+  #
+  # @return (Response) text/plain response of the server time in millis
   def time_millis
     get("/time/millis").raw
   end
 
+  # Method for {https://m2x.att.com/developer/documentation/v2/time Time} API
+  #
+  # @return (Response) text/plain response of the server time in ISO 8601 Format
   def time_iso8601
     get("/time/iso8601").raw
   end

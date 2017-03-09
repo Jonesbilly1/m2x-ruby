@@ -1,58 +1,72 @@
 require_relative "./resource"
 require_relative "./metadata"
 
-# Wrapper for AT&T M2X Device API
-# https://m2x.att.com/developer/documentation/v2/device
+# Wrapper for {https://m2x.att.com/developer/documentation/v2/device M2X Device} API
 class M2X::Client::Device < M2X::Client::Resource
   include M2X::Client::Metadata
 
   PATH = "/devices"
 
   class << self
-    # Retrieve the list of devices accessible by the authenticated API key
     #
-    # https://m2x.att.com/developer/documentation/v2/device#List-Devices
+    # Method for {https://m2x.att.com/developer/documentation/v2/device#List-Devices List Devices} endpoint.
+    # @param {Client} client Client API
+    # @param params Query parameters passed as keyword arguments. View M2X API Docs for listing of available parameters.
+    # @return (Array) List of {Device} objects
+    #
     def list(client, params={})
       res = client.get(PATH, params)
 
       res.json["devices"].map{ |atts| new(client, atts) } if res.success?
     end
 
-    # Retrieve the list of devices accessible by the authenticated API key that
-    # meet the search criteria.
     #
-    # https://m2x.att.com/developer/documentation/v2/device#Search-Devices
+    # Method for {https://m2x.att.com/developer/documentation/v2/device#Search-Devices Search Devices} endpoint.
+    #
+    # @param {Client} client Client API
+    # @param params Query parameters passed as keyword arguments. View M2X API Docs for listing of available parameters.
+    # @return (Array) List of {Device} objects.
+    #
     def search(client, params={})
       res = client.get("#{PATH}/search", params)
 
       res.json["devices"].map{ |atts| new(client, atts) } if res.success?
     end
 
-    # Search the catalog of public Devices.
     #
+    # Method for {https://m2x.att.com/developer/documentation/v2/device#List-Search-Public-Devices-Catalog List Search Public Devices Catalog} endpoint.
     # This allows unauthenticated users to search Devices from other users
     # that have been marked as public, allowing them to read public Device
     # metadata, locations, streams list, and view each Devices' stream metadata
     # and its values.
     #
-    # https://m2x.att.com/developer/documentation/v2/device#List-Search-Public-Devices-Catalog
+    # @param {Client} client Client API
+    # @param params Query parameters passed as keyword arguments. View M2X API Docs for listing of available parameters.
+    # @return (Array) List of {Device} objects.
+    #
     def catalog(client, params={})
       res = client.get("#{PATH}/catalog", params)
 
       res.json["devices"].map{ |atts| new(client, atts) } if res.success?
     end
 
-    # List Device Tags
-    # Retrieve the list of device tags for the authenticated user.
     #
-    # https://m2x.att.com/developer/documentation/v2/device#List-Device-Tags
+    # Method for {https://m2x.att.com/developer/documentation/v2/device#List-Device-Tags List Device Tags} endpoint.
+    #
+    # @param {Client} client Client API
+    # @return (Array) Device Tags associated with the account
+    #
     def tags(client)
       client.get("#{PATH}/tags")
     end
 
-    # Create a new device
     #
-    # https://m2x.att.com/developer/documentation/v2/device#Create-Device
+    # Method for {https://m2x.att.com/developer/documentation/v2/device#Create-Device Create Device} endpoint.
+    #
+    # @param {Client} client Client API
+    # @param params Query parameters passed as keyword arguments. View M2X API Docs for listing of available parameters.
+    # @return {Device} newly created device.
+    #
     def create!(client, params)
       res = client.post(PATH, nil, params, "Content-Type" => "application/json")
 
@@ -64,153 +78,142 @@ class M2X::Client::Device < M2X::Client::Resource
     @path ||= "#{ PATH }/#{ URI.encode(@attributes.fetch("id")) }"
   end
 
-  # View Request Log
+  #
+  # Method for {https://m2x.att.com/developer/documentation/v2/device#View-Request-Log View Request Log} endpoint.
   # Retrieve list of HTTP requests received lately by the specified device
   # (up to 100 entries).
   #
-  # https://m2x.att.com/developer/documentation/v2/device#View-Request-Log
+  # @return (Array) Most recent API requests made against this Device
+  #
   def log
     @client.get("#{path}/log")
   end
 
-  # Get location details of an existing Device.
   #
+  # Method for {https://m2x.att.com/developer/documentation/v2/device#Read-Device-Location Read Device Location} endpoint.
   # Note that this method can return an empty value (response status
   # of 204) if the device has no location defined.
   #
-  # https://m2x.att.com/developer/documentation/v2/device#Read-Device-Location
+  # @return {Response} Most recently logged location of the Device, see M2X API docs for details
+  #
   def location
     @client.get("#{path}/location")
   end
 
-  # Read Device Location History
   #
-  # Get location history details of an existing Device. Returns the 30 most
-  # recently logged locations by default.
-  # https://m2x.att.com/developer/documentation/v2/device#Read-Device-Location-History
+  # Method for {https://m2x.att.com/developer/documentation/v2/device#Read-Device-Location-History Read Device Location History} endpoint.
+  # Returns the 30 most recently logged locations by default.
+  #
+  # @param params Query parameters passed as keyword arguments. View M2X API Docs for listing of available parameters.
+  # @return (Array) Location history of the Device
+  #
   def location_history(params = {})
     @client.get("#{path}/location/waypoints", params)
   end
 
-  # Update the current location of the specified device.
   #
-  # https://m2x.att.com/developer/documentation/v2/device#Update-Device-Location
+  # Method for {https://m2x.att.com/developer/documentation/v2/device#Update-Device-Location Update Device Location} endpoint.
+  #
+  # @param params Query parameters passed as keyword arguments. View M2X API Docs for listing of available parameters.
+  # @return {Response} The API response, see M2X API docs for details.
+  #
   def update_location(params)
     @client.put("#{path}/location", nil, params, "Content-Type" => "application/json")
   end
 
-  # Delete waypoints in a device's location history by a date range
+  #
+  # Method for {https://m2x.att.com/developer/documentation/v2/device#Delete-Location-History Delete Location History} endpoint.
   # The `start` and `stop` parameters should be ISO8601 timestamps
   #
-  # https://m2x.att.com/developer/documentation/v2/device#Delete-Location-History
+  # @param (String) start from time to delete the location history
+  # @param (String) stop end time to delete the location history
+  # @return {Response} The API response, see M2X API docs for details.
+  #
   def delete_locations!(start, stop)
     params = { from: start, end: stop }
 
     @client.delete("#{path}/location/waypoints", nil, params, "Content-Type" => "application/json")
   end
 
-  # Post Device Updates (Multiple Values to Multiple Streams)
   #
-  # This method allows posting multiple values to multiple streams
-  # belonging to a device and optionally, the device location.
-  #
+  # Method for {https://m2x.att.com/developer/documentation/v2/device#Post-Device-Updates--Multiple-Values-to-Multiple-Streams- Post Device Updates (Multiple Values to Multiple Streams)} endpoint.
   # All the streams should be created before posting values using this method.
   #
-  # The `values` parameter contains an object with one attribute per each stream to be updated.
-  # The value of each one of these attributes is an array of timestamped values.
+  # @param params Query parameters passed as keyword arguments. View M2X API Docs for listing of available parameters.
+  # @return {Response} the API response, see M2X API docs for details
   #
-  #      {
-  #         temperature: [
-  #                        { "timestamp": <Time in ISO8601>, "value": x },
-  #                        { "timestamp": <Time in ISO8601>, "value": y },
-  #                      ],
-  #         humidity:    [
-  #                        { "timestamp": <Time in ISO8601>, "value": x },
-  #                        { "timestamp": <Time in ISO8601>, "value": y },
-  #                      ]
-  #
-  #      }
-  #
-  # The optional location attribute can contain location information that will
-  # be used to update the current location of the specified device
-  #
-  # https://m2x.att.com/developer/documentation/v2/device#Post-Device-Updates--Multiple-Values-to-Multiple-Streams-
   def post_updates(params)
     @client.post("#{path}/updates", nil, params, "Content-Type" => "application/json")
   end
 
-  # Post Device Update (Single Value to Multiple Streams)
   #
-  # This method allows posting a single value to multiple streams
-  # belonging to a device and optionally, the device's location.
-  #
+  # Method for {https://m2x.att.com/developer/documentation/v2/device#Post-Device-Update--Single-Values-to-Multiple-Streams- Post Device Update (Single Value to Multiple Streams)} endpoint.
   # All the streams should be created before posting values using this method.
   #
-  # The `params` parameter accepts a Hash which can contain the following keys:
-  #   - values:    A Hash in which the keys are the stream names and the values
-  #                hold the stream values.
-  #   - location:  (optional) A hash with the current location of the specified
-  #                device.
-  #   - timestamp: (optional) The timestamp for all the passed values and
-  #                location. If ommited, the M2X server's time will be used.
+  # @param params Query parameters passed as keyword arguments. View M2X API Docs for listing of available parameters.
+  # @return {Response} the API response, see M2X API docs for details
   #
-  #      {
-  #         values: {
-  #             temperature: 30,
-  #             humidity:    80
-  #         },
-  #         location: {
-  #           name:      "Storage Room",
-  #           latitude:  -37.9788423562422,
-  #           longitude: -57.5478776916862,
-  #           elevation: 5
-  #         }
-  #      }
-  #
-  # https://m2x.att.com/developer/documentation/v2/device#Post-Device-Update--Single-Values-to-Multiple-Streams-
   def post_update(params)
     @client.post("#{path}/update", nil, params, "Content-Type" => "application/json")
   end
 
-  # List Values from all Data Streams of a Device
   #
-  # https://m2x.att.com/developer/documentation/v2/device#List-Values-from-all-Data-Streams-of-a-Device
+  # Method for {https://m2x.att.com/developer/documentation/v2/device#List-Values-from-all-Data-Streams-of-a-Device List Values from all Data Streams} endpoint.
+  #
+  # @param params Query parameters passed as keyword arguments. View M2X API Docs for listing of available parameters.
+  # @return (Array) List of values from all the streams.
+  #
   def values(params = {})
     @client.get("#{path}/values", params)
   end
 
-  # Export Values from all Data Streams of a Device
   #
-  # https://m2x.att.com/developer/documentation/v2/device#Export-Values-from-all-Data-Streams-of-a-Device
+  # Method for {https://m2x.att.com/developer/documentation/v2/device#Export-Values-from-all-Data-Streams-of-a-Device Export Values from all Data Streams of a Device} endpoint.
+  #
+  # @param params Query parameters passed as keyword arguments. View M2X API Docs for listing of available parameters.
+  # @return {Response} the API response, see M2X API docs for details
+  #
   def values_export(params = {})
     @client.get("#{path}/values/export.csv", params)
   end
 
-  # Search Values from all Data Streams of a Device
   #
-  # https://m2x.att.com/developer/documentation/v2/device#Search-Values-from-all-Data-Streams-of-a-Device
+  # Method for {https://m2x.att.com/developer/documentation/v2/device#Search-Values-from-all-Data-Streams-of-a-Device Search Values from all Data Streams of a Device} endpoint.
+  #
+  # @param params Query parameters passed as keyword arguments. View M2X API Docs for listing of available parameters.
+  # @return (Array) List of values matching the search criteria.
+  #
   def values_search(params)
     @client.get("#{path}/values/search", nil, params, "Content-Type" => "application/json")
   end
 
-  # Retrieve list of data streams associated with the device.
   #
-  # https://m2x.att.com/developer/documentation/v2/device#List-Data-Streams
+  # Method for {https://m2x.att.com/developer/documentation/v2/device#List-Data-Streams List Data Streams} endpoint.
+  #
+  # @return (Array) List of {Stream} objects.
+  #
   def streams
     ::M2X::Client::Stream.list(@client, self)
   end
 
-  # Get details of a specific data Stream associated with the device
   #
-  # https://m2x.att.com/developer/documentation/v2/device#View-Data-Stream
+  # Method for {https://m2x.att.com/developer/documentation/v2/device#View-Data-Stream View Data Stream} endpoint.
+  #
+  # @param (String) name name of the stream to be fetched
+  # @return {Stream} The matching stream
+  #
   def stream(name)
     ::M2X::Client::Stream.fetch(@client, self, name)
   end
 
-  # Update a data stream associated with the Device
+  #
+  # Method for {https://m2x.att.com/developer/documentation/v2/device#Create-Update-Data-Stream Create Update Data Stream} endpoint.
   # (if a stream with this name does not exist it gets created).
   #
-  # https://m2x.att.com/developer/documentation/v2/device#Create-Update-Data-Stream
+  # @param (String) name Name of the stream to be updated
+  # @param params Query parameters passed as keyword arguments. View M2X API Docs for listing of available parameters.
+  # @return {Stream} The Stream being updated
+  #
   def update_stream(name, params={})
     stream = ::M2X::Client::Stream.new(@client, self, "name" => name)
 
@@ -218,51 +221,70 @@ class M2X::Client::Device < M2X::Client::Resource
   end
   alias_method :create_stream, :update_stream
 
-  # Returns a list of API keys associated with the device
+  #
+  # Method for {https://m2x.att.com/developer/documentation/v2/keys#List-Keys List Keys} endpoint.
+  #
+  # @return (Array) List of {Key} objects.
+  #
   def keys
     ::M2X::Client::Key.list(@client, params.merge(device: self["id"]))
   end
 
-  # Creates a new API key associated to the device
   #
-  # If a parameter named `stream` is supplied with a stream name, it
-  # will create an API key associated with that stream only.
+  # Method for {https://m2x.att.com/developer/documentation/v2/keys#Create-Key Create Key} endpoint.
+  # Note that, according to the parameters sent, you can create a
+  # Master API Key or a Device/Stream API Key.
+  #
+  # @param params Query parameters passed as keyword arguments. View M2X API Docs for listing of available parameters.
+  # @return {Key} The newly created Key.
+  #
   def create_key(params)
     ::M2X::Client::Key.create!(@client, params.merge(device: self["id"]))
   end
 
-  # Device's List of Received Commands
   #
-  # Retrieve the list of recent commands sent to the current device (as given by the API key).
+  # Method for {https://m2x.att.com/developer/documentation/v2/commands#Device-s-List-of-Received-Commands Device's List of Recieved Commands} endpoint.
   #
-  # https://m2x.att.com/developer/documentation/v2/commands#Device-s-List-of-Received-Commands
+  # @param params Query parameters passed as keyword arguments. View M2X API Docs for listing of available parameters.
+  # @return (Array) List of {Command} objects.
+  #
   def commands(params = {})
     res = @client.get("#{path}/commands", params)
 
     res.json["commands"].map { |atts| M2X::Client::Command.new(@client, atts) } if res.success?
   end
 
-  # Device's View of Command Details
   #
+  # Method for {https://m2x.att.com/developer/documentation/v2/commands#Device-s-View-of-Command-Details Device's View of Command Details} endpoint.
   # Get details of a received command including the delivery information for this device.
   #
-  # https://m2x.att.com/developer/documentation/v2/commands#Device-s-View-of-Command-Details
+  # @param (String) id Command ID to get
+  # @return {Command} object retrieved
+  #
   def command(id)
     res = @client.get("#{path}/commands/#{id}")
 
     M2X::Client::Command.new(@client, res.json) if res.success?
   end
 
-  # Process a command
   #
-  # https://m2x.att.com/developer/documentation/v2/commands#Device-Marks-a-Command-as-Processed
+  # Method for {https://m2x.att.com/developer/documentation/v2/commands#Device-Marks-a-Command-as-Processed Process Command} endpoint.
+  #
+  # @param (String) id Command ID to process
+  # @param params Query parameters passed as keyword arguments. View M2X API Docs for listing of available parameters.
+  # @return {Response} The API response, see M2X API docs for details
+  #
   def process_command(id, params = {})
     @client.post("#{path}/commands/#{id}/process", nil, params)
   end
 
-  # Reject a command
   #
-  # https://m2x.att.com/developer/documentation/v2/commands#Device-Marks-a-Command-as-Rejected
+  # Method for {https://m2x.att.com/developer/documentation/v2/commands#Device-Marks-a-Command-as-Rejected Reject Command} endpoint.
+  #
+  # @param (String) id Command ID to process
+  # @param params Query parameters passed as keyword arguments. View M2X API Docs for listing of available parameters.
+  # @return {Response} The API response, see M2X API docs for details
+  #
   def reject_command(id, params = {})
     @client.post("#{path}/commands/#{id}/reject", nil, params)
   end

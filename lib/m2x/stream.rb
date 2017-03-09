@@ -1,22 +1,30 @@
 require_relative "./resource"
 
-# Wrapper for AT&T M2X Data Streams API
-# https://m2x.att.com/developer/documentation/v2/device
+# Wrapper for {https://m2x.att.com/developer/documentation/v2/device M2X Data Streams} API.
 class M2X::Client::Stream < M2X::Client::Resource
 
   class << self
-    # Get details of a specific data Stream associated with a device
     #
-    # https://m2x.att.com/developer/documentation/v2/device#View-Data-Stream
+    # Method for {https://m2x.att.com/developer/documentation/v2/device#View-Data-Stream View Data Streams} endpoint.
+    #
+    # @param {Client} client Client API
+    # @param (String) device device to fetch
+    # @param (String) name of the stream to be fetched
+    # @return {Stream} fetched stream
+    #
     def fetch(client, device, name)
       res = client.get("#{device.path}/streams/#{URI.encode(name)}")
 
       new(client, device, res.json) if res.success?
     end
 
-    # Retrieve list of data streams associated with a device.
     #
-    # https://m2x.att.com/developer/documentation/v2/device#List-Data-Streams
+    # Method for {https://m2x.att.com/developer/documentation/v2/device#List-Data-Streams List Data Streams} endpoint.
+    #
+    # @param {Client} client Client API
+    # @param (String) device device to get its data streams
+    # @return (Array) List of {Stream} objects
+    #
     def list(client, device)
       res = client.get("#{device.path}/streams")
 
@@ -34,48 +42,60 @@ class M2X::Client::Stream < M2X::Client::Resource
     @path ||= "#{@device.path}/streams/#{ URI.encode(@attributes.fetch("name")) }"
   end
 
-  # Update stream properties
-  # (if the stream does not exist it gets created).
   #
-  # https://m2x.att.com/developer/documentation/v2/device#Create-Update-Data-Stream
+  # Method for {https://m2x.att.com/developer/documentation/v2/device#Create-Update-Data-Stream Create Update Data Stream} endpoint.
+  #
+  # @param params Query parameters passed as keyword arguments. View M2X API Docs for listing of available parameters.
+  # @return {Stream} The newly created stream
+  #
   def update!(params)
     res = @client.put(path, {}, params, "Content-Type" => "application/json")
 
     @attributes = res.json if res.status == 201
   end
 
-  # List values from the stream, sorted in reverse chronological order
-  # (most recent values first).
   #
-  # https://m2x.att.com/developer/documentation/v2/device#List-Data-Stream-Values
+  # Method for {https://m2x.att.com/developer/documentation/v2/device#List-Data-Stream-Values List Data Stream Values} endpoint.
+  #
+  # @param params Query parameters passed as keyword arguments. View M2X API Docs for listing of available parameters.
+  # @return (Array) List of values from the stream
+  #
   def values(params={})
     @client.get("#{path}/values", params)
   end
 
-  # Sample values from the stream, sorted in reverse chronological order
-  # (most recent values first).
   #
+  # Method for {https://m2x.att.com/developer/documentation/v2/device#Data-Stream-Sampling Data Stream Sampling} endpoint.
   # This method only works for numeric streams
   #
-  # https://m2x.att.com/developer/documentation/v2/device#Data-Stream-Sampling
+  # @param params Query parameters passed as keyword arguments. View M2X API Docs for listing of available parameters.
+  # @return (Array) List of sample values from the stream
+  #
   def sampling(params)
     @client.get("#{path}/sampling", params)
   end
 
-  # Return count, min, max, average and standard deviation stats for the
-  # values of the stream.
   #
+  # Method for {https://m2x.att.com/developer/documentation/v2/device#Data-Stream-Stats Data Stream Stats} endpoint.
+  # Returns the count, min, max, average and standard deviation stats for the
+  # values of the stream.
   # This method only works for numeric streams
   #
-  # https://m2x.att.com/developer/documentation/v2/device#Data-Stream-Stats
+  # @param params Query parameters passed as keyword arguments. View M2X API Docs for listing of available parameters.
+  # @return (Array) Stats of the stream
+  #
   def stats(params={})
     @client.get("#{path}/stats", params)
   end
 
-  # Update the current value of the stream. The timestamp
-  # is optional. If omitted, the current server time will be used
   #
-  # https://m2x.att.com/developer/documentation/v2/device#Update-Data-Stream-Value
+  # Method for {https://m2x.att.com/developer/documentation/v2/device#Update-Data-Stream-Value Update Data Stream Value} endpoint.
+  # The timestamp is optional. If omitted, the current server time will be used
+  #
+  # @param (String) value Value to be updated
+  # @param (String) timestamp Current Timestamp
+  # @return void
+  #
   def update_value(value, timestamp=nil)
     params = { value: value }
 
@@ -84,27 +104,33 @@ class M2X::Client::Stream < M2X::Client::Resource
     @client.put("#{path}/value", nil, params, "Content-Type" => "application/json")
   end
 
+  #
+  # Method for {https://m2x.att.com/developer/documentation/v2/device#Post-Data-Stream-Values Post Data Stream Values} endpoint.
   # Post multiple values to the stream
-  #
   # The `values` parameter is an array with the following format:
-  #
   #     [
   #       { "timestamp": <Time in ISO8601>, "value": x },
   #       { "timestamp": <Time in ISO8601>, "value": y },
   #       [ ... ]
   #     ]
   #
-  # https://m2x.att.com/developer/documentation/v2/device#Post-Data-Stream-Values
+  # @param values The values being posted, formatted according to the API docs
+  # @return {Response} The API response, see M2X API docs for details
+  #
   def post_values(values)
     params = { values: values }
 
     @client.post("#{path}/values", nil, params, "Content-Type" => "application/json")
   end
 
-  # Delete values in a stream by a date range
+  #
+  # Method for {https://m2x.com/developer/documentation/v2/device#Delete-Data-Stream-Values Delete Data Stream Values} endpoint.
   # The `start` and `stop` parameters should be ISO8601 timestamps
   #
-  # https://m2x.com/developer/documentation/v2/device#Delete-Data-Stream-Values
+  # @param (String) start from time to delete the data
+  # @param (String) stop end time to delete the data
+  # @return {Response} The API response, see M2X API docs for details
+  #
   def delete_values!(start, stop)
     params = { from: start, end: stop }
 
