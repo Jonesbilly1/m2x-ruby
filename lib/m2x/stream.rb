@@ -49,9 +49,9 @@ class M2X::Client::Stream < M2X::Client::Resource
   # @return {Stream} The newly created stream
   #
   def update!(params)
-    res = @client.put(path, {}, params, "Content-Type" => "application/json")
-
-    @attributes = res.json if res.status == 201
+    @client.put(path, {}, params, "Content-Type" => "application/json").tap do |res|
+      @attributes = res.json if res.status == 201
+    end
   end
 
   #
