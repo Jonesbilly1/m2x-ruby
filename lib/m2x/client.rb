@@ -182,6 +182,29 @@ class M2X::Client
     M2X::Client::Key.list(self)
   end
 
+  # Obtain an Integration from M2X
+  #
+  # This method instantiates an instance of Integration and calls
+  # `Integration#view` method, returning the integration instance with all its
+  # attributes initialized
+  def integration(id)
+    M2X::Client::Integration.new(self, "id" => id).tap(&:view)
+  end
+
+  # Creates a new integration on M2X with the specified parameters
+  #
+  # See {M2X::Client::Integration.create!} for more details
+  def create_integration(params)
+    M2X::Client::Integration.create!(self, params)
+  end
+
+  # Retrieve list of integrations associated with the user account.
+  #
+  # See {M2X::Client::Integration.list} for more details
+  def integrations
+    M2X::Client::Integration.list(self)
+  end
+
   # Method for {https://m2x.att.com/developer/documentation/v2/time Time} API
   #
   # @return (Response) text/plain response of the server time in all three formats

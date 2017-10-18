@@ -60,6 +60,13 @@ This provides an interface to your data in M2X
   job = m2x.job("<JOB-ID>")
   ```
 
+- [Integration](lib/m2x/integration.rb)
+  ```ruby
+  integration = m2x.integration("<INTEGRATION-ID>")
+
+  integrations = m2x.integrations
+  ```
+
 Refer to the documentation on each class for further usage instructions.
 
 ## Time
